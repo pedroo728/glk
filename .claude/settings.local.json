@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/opt/homebrew/bin/brew list *)",
+      "Read(//opt/homebrew/bin/**)",
+      "Bash(/opt/homebrew/bin/node --version)",
+      "Bash(npm --version)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const p = require\\('puppeteer'\\); console.log\\(p.executablePath ? p.executablePath\\(\\) : 'N/A'\\)\")",
+      "Bash(node -e \"import\\('puppeteer'\\).then\\(p => console.log\\(p.default.executablePath\\(\\)\\)\\)\")",
+      "Bash(node serve.mjs)",
+      "Bash(node screenshot.mjs http://localhost:3000)",
+      "Bash(kill %1)",
+      "Bash(node screenshot.mjs http://localhost:3000 hero)",
+      "Bash(npm list *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
+  }
+}

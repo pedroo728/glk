@@ -1,0 +1,145 @@
+GLK Construction: Brand & Development Blueprint
+
+1. BRAND IDENTITY & SCHEME (To be defined/uploaded by owner)
+
+Company Name: GLK Construction
+
+Tagline / Positioning: Ft. Lauderdale Building Contractor & Home Builder
+
+Logo Assets: [User to insert: Primary Logo, Secondary Logo, and Favicon. Mention if the logo is text-based or has a specific icon]
+
+Primary Brand Colors: [User to insert HEX codes. Recommended based on industry standard: Deep Navy Blue or Steel Gray for trust, with a strong accent like Gold or Safety Orange]
+
+Secondary/Background Colors: Clean White (#FFFFFF), Off-White/Light Gray for section backgrounds.
+
+Typography Preferences: Modern, readable Sans-Serif fonts (e.g., Roboto, Montserrat, or Open Sans) for headers; clean, legible fonts for body text.
+
+2. CORE COMPANY INFORMATION
+
+Phone: 954-934-5250
+
+Fax: 954-302-4986
+
+Email: GLKBuild@Gmail.com
+
+Licenses: CGC1523710 | NAT-F110759-1
+
+
+
+Experience Statement: "For more than three decades we have helped home and business owners smoothly navigate the challenging process of remodeling, restoration and renovation. In addition to delivering superior quality we are innovative in keeping costs down, saving time, and minimizing disturbance. We are known for consistent on-time, on-budget projects."
+
+3. SITE ARCHITECTURE & NAVIGATION MENU
+The new website must maintain the following top-level navigation and nested sub-pages/sections exactly as listed below to preserve SEO and site structure:
+
+Header Utilities (Top Bar):
+
+Call Us
+
+Find Us
+
+Email Us
+
+Home
+
+Reviews (References - Known by Our Work)
+
+Residential
+
+New Construction
+
+Additions (Addition Demo & Rebuild)
+
+Remodeling
+"Testimonial From a Satisfied Customer
+
+Gary,
+
+Just wanted to drop you a note and let you know how I appreciate the great job you are doing on the house. As I see it we are ahead of schedule, and on target with your estimate. I know how these projects can get out of control and cost can go up, but you have kept the job running smoothly and the cost down. I also appreciate you taking the time to explain to me the scope of work with the new wind loads of 160 miles an hour, when we are finished I am sure we will have the strongest house on the block.
+
+Thanks again, 
+Cory B."
+
+Decks & Docks
+
+Kitchens
+"The one to call to get design ideas and product information.
+ We have the contacts to the very best the industry has to offer and still keep within your budget.
+"
+
+Summer Kitchens
+
+Bathrooms (Baths)
+Remodeling Tips  
+Streamline the vanity
+Double sinks have long been popular, but having just one gives you more counter space, saves the expense of an extra sink and faucet and because there is less plumbing involved, gives you more storage space in the cabinet.
+ 
+Conceal the toilet
+Setting the toilet apart from the rest of the bathroom with a partial wall or door of its own provides privacy and also makes for a more attractive bathroom. Even if your toilet is one of those new water-saving models.
+ 
+Layer the light
+Overhead fixtures can cast shadows on your face when you're trying to shave or apply makeup. Instead, create layers of light, including wall-mounted sconces or other vertical fixtures on either side of the vanity.""
+
+Moldings & Trims
+
+Commercial
+
+Concrete Restoration
+"Services
+ 
+Concrete Restoration 
+Water proofing
+Spalled Concrete  
+Exposed Rebar
+Column & Beam
+ 
+ 
+Parking Structures  
+Slab Repair  
+Slab Leveling  
+Waterproofing  
+Wall cracks 
+Epoxy Injection"
+
+Commercial Renovation
+
+Services (Design Build - Full Service Design & Construction)
+
+Design Build
+
+Roofing
+
+Stucco
+
+Windows
+
+Tile Flooring
+
+Wood Flooring (Flooring Inlays)
+
+Plumbing
+
+Pavers
+
+Framing & Drywall
+
+Pools
+
+Electrical
+
+About (About Us)
+
+Contact
+GLKBuild@Gmail.com
+
+4. PAGE COMPONENT BLUEPRINT
+When developing the pages, ensure the following interactive and structural components are built into the design:
+
+Service "Cards" or Grids: The 'Services' section contains 20+ specific items. These must be displayed in a modern, easy-to-read grid format rather than a text list.
+
+Video Integration: The site must support an embedded YouTube video player (currently on the live site) integrated cleanly into the page layout, not just floating on a blank background.
+
+Footer: Must globally display the Company Name (GLK Construction), Phone, Fax, Email, Licenses, Copyright (© 2026), and social sharing links.
+
+5. CONTENT MIGRATION ALERTS (For the Developer)
+
+Placeholder Overwrites Required: The current site contains default builder text under 'New Residential Construction', 'Drywall', and 'Electrical' (e.g., "Write a description for this list item..." and "This is a text area. Writing in paragraphs lets your visitor..."). The developer must flag these areas in the wireframe so the owner can write and approve new descriptions before launch.
