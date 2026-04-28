@@ -2194,15 +2194,22 @@
     // ── Services mosaic ─────────────────────────────────────────
     const MOSAIC_COLORS = ['1a1a1a/C2AF75','2c2c2c/C2AF75','3d3d3d/C2AF75','1a1a1a/D6251B'];
 
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
     function getMosaicImages(section, sub) {
-      // Match primary section/subsection OR any tag
       const matches = _allProjects.filter(p =>
         p.image && (
           (p.section === section && p.subsection === sub) ||
           (p.tags || []).some(t => t.section === section && t.sub === sub)
         )
       );
-      const imgs = matches.map(p => ({ src: p.image, alt: p.title }));
+      const imgs = shuffle(matches.map(p => ({ src: p.image, alt: p.title })));
       while (imgs.length < 4) {
         imgs.push({ src: `https://placehold.co/640x480/${MOSAIC_COLORS[imgs.length]}?text=Coming+Soon`, alt: 'Coming soon' });
       }
@@ -2259,19 +2266,37 @@
         });
       }
 
-      // Default: populate both mosaics with the 4 most recent images
-      const withImages = _allProjects.filter(p => p.image).slice(0, 4);
-      const defaultImgs = withImages.map(p => ({ src: p.image, alt: p.title }));
-      while (defaultImgs.length < 4) {
-        defaultImgs.push({ src: `https://placehold.co/640x480/${MOSAIC_COLORS[defaultImgs.length]}?text=GLK+Work`, alt: 'GLK Work' });
-      }
-      [document.getElementById('serviceMosaic'), document.getElementById('serviceMosaicMobile')].forEach(el => {
-        if (!el) return;
-        el.querySelectorAll('.mosaic-img').forEach((cell, i) => {
-          cell.querySelector('img').src = defaultImgs[i].src;
-          cell.querySelector('img').alt = defaultImgs[i].alt;
+      // On load: randomly activate one service item
+      const allItems = [...document.querySelectorAll('.service-item[data-section]')];
+      if (allItems.length) {
+        const pick = allItems[Math.floor(Math.random() * allItems.length)];
+        pick.classList.add('active');
+
+        const sec = pick.dataset.section;
+        const sub = pick.dataset.sub;
+        const label = pick.textContent.trim();
+
+        // Sync mobile dropdown to the random pick
+        const mobileSelect = document.getElementById('servicesMobileSelect');
+        if (mobileSelect) {
+          const matchOpt = [...mobileSelect.options].find(o => o.value === `${sec}|${sub}`);
+          if (matchOpt) mobileSelect.value = matchOpt.value;
+        }
+
+        // Update mosaics (no hint needed — a service is already selected)
+        const hint = document.querySelector('.mosaic-hint');
+        if (hint) hint.classList.add('hidden');
+        const mosaicLabel = document.getElementById('mosaicLabel');
+        if (mosaicLabel) mosaicLabel.textContent = label;
+        const imgs = getMosaicImages(sec, sub);
+        [document.getElementById('serviceMosaic'), document.getElementById('serviceMosaicMobile')].forEach(el => {
+          if (!el) return;
+          el.querySelectorAll('.mosaic-img').forEach((cell, i) => {
+            cell.querySelector('img').src = imgs[i].src;
+            cell.querySelector('img').alt = imgs[i].alt;
+          });
         });
-      });
+      }
     }
 
     setTimeout(wireServiceItems, 800);
