@@ -1133,6 +1133,35 @@
       .services-list { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
+      /* Halve section vertical spacing on mobile */
+      .portfolio-section { padding: 45px 0; }
+      .services-section { padding: 45px 0; }
+      .process-section { padding: 45px 0; }
+      .testimonials-section { padding: 45px 24px; }
+      .about-section { padding: 45px 0; }
+      .contact-section { padding: 45px 0; }
+      .cta-banner { padding: 40px 24px; }
+      .testimonials-header { margin-bottom: 24px; }
+      /* Mobile contact button in nav */
+      #mobile-contact-btn {
+        display: inline-flex;
+        align-items: center;
+        background: var(--red);
+        color: var(--white);
+        border: none;
+        border-radius: 4px;
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 8px 14px;
+        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background 0.18s;
+      }
+      #mobile-contact-btn:hover { background: #b81e15; }
     }
   </style>
 </head>
@@ -1222,9 +1251,12 @@
         <a href="#contact" class="btn-nav">Contact Us</a>
       </nav>
 
-      <button id="menu-toggle" aria-label="Open menu" style="display:none;background:none;border:none;cursor:pointer;padding:8px;" class="lg:hidden">
-        <svg width="24" height="24" fill="none" stroke="var(--charcoal)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
+      <div id="mobile-nav-actions" style="display:none;align-items:center;gap:10px;">
+        <a href="#contact" id="mobile-contact-btn">Contact Us</a>
+        <button id="menu-toggle" aria-label="Open menu" style="background:none;border:none;cursor:pointer;padding:8px;">
+          <svg width="24" height="24" fill="none" stroke="var(--charcoal)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
     </div>
 
     <div id="mobile-menu">
@@ -1803,14 +1835,17 @@
   <script>
     // ── Mobile menu toggle ──────────────────────────────────────
     const toggle = document.getElementById('menu-toggle');
+    const mobileNavActions = document.getElementById('mobile-nav-actions');
     const mobileMenu = document.getElementById('mobile-menu');
     if (toggle) toggle.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+    const mobileContactBtn = document.getElementById('mobile-contact-btn');
+    if (mobileContactBtn) mobileContactBtn.addEventListener('click', () => mobileMenu.classList.remove('open'));
 
     function checkWidth() {
       if (window.innerWidth < 768) {
-        toggle && (toggle.style.display = 'block');
+        mobileNavActions && (mobileNavActions.style.display = 'flex');
       } else {
-        toggle && (toggle.style.display = 'none');
+        mobileNavActions && (mobileNavActions.style.display = 'none');
         mobileMenu.classList.remove('open');
       }
     }
