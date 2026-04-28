@@ -25,7 +25,13 @@
       "title": "Waterfront Deck & Dock — Pompano Beach",
       "description": "Custom IPE wood deck, composite dock, summer kitchen installation, and LED lighting system.",
       "location": "Pompano Beach",
-      "image": "/images/portfolio/residential/decks-docks/decks_docks_1.webp"
+      "image": "/images/portfolio/residential/decks-docks/decks_docks_1.webp",
+      "tags": [
+        {
+          "section": "services",
+          "sub": "pools"
+        }
+      ]
     },
     {
       "id": "proj-1777394910792",
@@ -98,6 +104,83 @@
       "description": "",
       "location": "Pompano Beach",
       "image": "/images/portfolio/residential/kitchens/Kitchens.webp"
+    },
+    {
+      "id": "proj-1777405035336",
+      "section": "residential",
+      "subsection": "remodeling",
+      "tags": [
+        {
+          "section": "residential",
+          "sub": "additions"
+        },
+        {
+          "section": "services",
+          "sub": "roofing"
+        },
+        {
+          "section": "services",
+          "sub": "framing-drywall"
+        }
+      ],
+      "title": "(TODO) - Create Project for multiple photos.",
+      "description": "Week 4 of a 10 week remodel",
+      "location": "Ft. Lauderdale",
+      "image": "/images/portfolio/residential/remodeling/DSCI0321.25742450_std-1920w.JPG.webp"
+    },
+    {
+      "id": "proj-1777405165083",
+      "section": "residential",
+      "subsection": "decks-docks",
+      "tags": [
+        {
+          "section": "residential",
+          "sub": "summer-kitchens"
+        },
+        {
+          "section": "services",
+          "sub": "wood-flooring"
+        }
+      ],
+      "title": "Summer Kitchen Dock",
+      "description": "",
+      "location": "Test Location",
+      "image": "/images/portfolio/residential/decks-docks/summer_kitchens1after.webp"
+    },
+    {
+      "id": "proj-1777405498357",
+      "section": "residential",
+      "subsection": "moldings-trims",
+      "tags": [],
+      "title": "Kitchen Trim",
+      "description": "",
+      "location": "Coral Springs",
+      "image": "/images/portfolio/residential/moldings-trims/fort-lauderdale-moldings-and-trims-1920w.jpg.webp"
+    },
+    {
+      "id": "proj-1777405536980",
+      "section": "residential",
+      "subsection": "moldings-trims",
+      "tags": [
+        {
+          "section": "services",
+          "sub": "framing-drywall"
+        }
+      ],
+      "title": "Dining Area Trim",
+      "description": "",
+      "location": "Coral Springs",
+      "image": "/images/portfolio/residential/moldings-trims/IMG_4902-1.29252846_std-1920w.png.webp"
+    },
+    {
+      "id": "proj-1777406279369",
+      "section": "services",
+      "subsection": "plumbing",
+      "tags": [],
+      "title": "Indoor Jacuzzi",
+      "description": "",
+      "location": "",
+      "image": "/images/portfolio/services/plumbing/CAM00248-800x1066.14141235_std-1920w.jpg.webp"
     }
   ]
 }

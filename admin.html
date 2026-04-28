@@ -302,6 +302,16 @@ function updatePathDisplay(){
 // pendingTags is stored on a JS object keyed by chip container id
 const _pendingTags={};
 
+async function saveTagsForProject(tagsKey){
+  const id = tagsKey.replace(/^tags_/, '');
+  const tags = _pendingTags[tagsKey] || [];
+  try {
+    const res = await fetch(`/api/portfolio/${id}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({tags})});
+    if (!res.ok) throw new Error((await res.json()).error || 'Save failed');
+    showToast('✓ Tags saved!');
+  } catch(e) { showToast('Error saving tags: '+e.message, true); }
+}
+
 function addTagChip(secId, subId, chipContainerId, tagsKey){
   const sec=document.getElementById(secId).value;
   const sub=document.getElementById(subId).value;
@@ -316,12 +326,14 @@ function addTagChip(secId, subId, chipContainerId, tagsKey){
   document.getElementById(secId).value='';
   document.getElementById(subId).innerHTML='<option value="">Select section first…</option>';
   document.getElementById(subId).disabled=true;
+  saveTagsForProject(tagsKey);
 }
 
 function removeTag(tagsKey, idx, chipContainerId){
   if(!_pendingTags[tagsKey]) return;
   _pendingTags[tagsKey].splice(idx,1);
   renderTagChips(chipContainerId, tagsKey);
+  saveTagsForProject(tagsKey);
 }
 
 function renderTagChips(chipContainerId, tagsKey){

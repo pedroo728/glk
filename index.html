@@ -1372,10 +1372,10 @@
         <div class="hero-video-outer">
           <div class="hero-video-wrap">
             <iframe
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&loop=1&playlist=dQw4w9WgXcQ"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
               title="GLK Construction"
               frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen>
             </iframe>
           </div>
@@ -1999,7 +1999,7 @@
       const catLabel = p.section ? p.section.charAt(0).toUpperCase() + p.section.slice(1) : '';
       const subLabel = labelFor(p.section, p.subsection);
       return `
-        <div class="portfolio-card" data-section="${p.section || ''}" data-sub="${p.subsection || ''}">
+        <div class="portfolio-card" data-section="${p.section || ''}" data-sub="${p.subsection || ''}" data-tags='${JSON.stringify(p.tags || [])}'>
           <div class="portfolio-card-img">
             <img src="${imgSrc}" alt="${p.title}" loading="lazy" />
             <div class="portfolio-card-overlay"><span>View Project &rarr;</span></div>
@@ -2015,8 +2015,13 @@
     function applyPortfolioFilter() {
       const cards = document.querySelectorAll('.portfolio-card');
       cards.forEach(card => {
-        const secMatch = _activeSection === 'all' || card.dataset.section === _activeSection;
-        const subMatch = _activeSub === 'all' || card.dataset.sub === _activeSub;
+        const tags = JSON.parse(card.dataset.tags || '[]');
+        const secMatch = _activeSection === 'all'
+          || card.dataset.section === _activeSection
+          || tags.some(t => t.section === _activeSection);
+        const subMatch = _activeSub === 'all'
+          || card.dataset.sub === _activeSub
+          || tags.some(t => t.sub === _activeSub && (_activeSection === 'all' || t.section === _activeSection));
         card.style.display = (secMatch && subMatch) ? '' : 'none';
       });
     }
@@ -2027,7 +2032,18 @@
         subBar.style.display = 'none';
         return;
       }
-      const subs = TAXONOMY[_activeSection];
+      // Only show sub-tabs that have at least one card (primary sub OR tag)
+      const cards = [...document.querySelectorAll('.portfolio-card')];
+      const activeSubs = new Set(
+        cards.flatMap(card => {
+          const tags = JSON.parse(card.dataset.tags || '[]');
+          const matches = [];
+          if (card.dataset.section === _activeSection) matches.push(card.dataset.sub);
+          tags.filter(t => t.section === _activeSection).forEach(t => matches.push(t.sub));
+          return matches;
+        })
+      );
+      const subs = TAXONOMY[_activeSection].filter(s => activeSubs.has(s.id));
       const secCap = _activeSection.charAt(0).toUpperCase() + _activeSection.slice(1);
       subBar.innerHTML =
         `<button class="sub-tab${_activeSub === 'all' ? ' active' : ''}" data-sub="all">All ${secCap}</button>` +
@@ -2178,5 +2194,7 @@
 
     setTimeout(wireServiceItems, 800);
   </script>
+
+
 </body>
 </html>
