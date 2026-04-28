@@ -1,0 +1,103 @@
+{
+  "projects": [
+    {
+      "id": "proj-2",
+      "section": "residential",
+      "subsection": "additions",
+      "title": "Luxury Home Addition — Coral Springs",
+      "description": "1,800 sq ft addition featuring new master suite, open kitchen, and custom outdoor entertaining space.",
+      "location": "Coral Springs",
+      "image": "/images/portfolio/residential/additions/additions2.webp"
+    },
+    {
+      "id": "proj-4",
+      "section": "commercial",
+      "subsection": "concrete-restoration",
+      "title": "Concrete Restoration — Parking Structure",
+      "description": "Full spalled concrete repair, epoxy injection, waterproofing, and rebar replacement on 3-level structure.",
+      "location": "Ft. Lauderdale",
+      "image": "/images/portfolio/commercial/concrete-restoration/concrete_restorations1.webp"
+    },
+    {
+      "id": "proj-6",
+      "section": "residential",
+      "subsection": "decks-docks",
+      "title": "Waterfront Deck & Dock — Pompano Beach",
+      "description": "Custom IPE wood deck, composite dock, summer kitchen installation, and LED lighting system.",
+      "location": "Pompano Beach",
+      "image": "/images/portfolio/residential/decks-docks/decks_docks_1.webp"
+    },
+    {
+      "id": "proj-1777394910792",
+      "section": "residential",
+      "subsection": "new-construction",
+      "title": "Test Upload - House Build",
+      "description": "Ground zero build.",
+      "location": "Ft. Lauderdale",
+      "image": "/images/portfolio/residential/new-construction/new_construction6.webp"
+    },
+    {
+      "id": "proj-1777395224342",
+      "section": "commercial",
+      "subsection": "commercial-renovation",
+      "title": "Frame Addition",
+      "description": "",
+      "location": "Coral Gables",
+      "image": "/images/portfolio/commercial/commercial-renovation/additions7.webp"
+    },
+    {
+      "id": "proj-1777396788153",
+      "section": "services",
+      "subsection": "design-build",
+      "title": "1 Bedroom Remodel",
+      "description": "Quick initial sketch",
+      "location": "Orlando, Florida",
+      "image": "/images/portfolio/services/design-build/h9-img-2.jpg"
+    },
+    {
+      "id": "proj-1777396897356",
+      "section": "commercial",
+      "subsection": "commercial-renovation",
+      "title": "Flagler Village. Restoration",
+      "description": "Restoration of a three story building at Flagler Village.",
+      "location": "Downtown Fort Lauderdale",
+      "image": "/images/portfolio/commercial/commercial-renovation/cocrete_renovations__Downtown_Fort_Lauderdale_Restoration_of_a_three_story_building_at_Flagler_Village.__.webp"
+    },
+    {
+      "id": "proj-1777396959761",
+      "section": "residential",
+      "subsection": "bathrooms",
+      "title": "Bathroom Redesign",
+      "description": "",
+      "location": "West Palm Beach",
+      "image": "/images/portfolio/residential/bathrooms/bathrooms1.webp"
+    },
+    {
+      "id": "proj-1777397013071",
+      "section": "residential",
+      "subsection": "kitchens",
+      "title": "Kitchen Remodel",
+      "description": "",
+      "location": "Miami Beach",
+      "image": "/images/portfolio/residential/kitchens/kitchens-after2.jpeg"
+    },
+    {
+      "id": "proj-1777397087322",
+      "section": "residential",
+      "subsection": "decks-docks",
+      "title": "Dock Remodel",
+      "description": "",
+      "location": "",
+      "image": "/images/portfolio/residential/decks-docks/decks_docks_6.webp"
+    },
+    {
+      "id": "proj-1777397320506",
+      "section": "residential",
+      "subsection": "kitchens",
+      "title": "Kitchen Remodel",
+      "description": "",
+      "location": "Pompano Beach",
+      "image": "/images/portfolio/residential/kitchens/Kitchens.webp"
+    }
+  ]
+}

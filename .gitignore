@@ -3,3 +3,8 @@ temporary screenshots/
 .claude/
 .vscode/
 .mcp.json
+.env
+.env.local
+.env*.local
+*.log
+.DS_Store

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GLK Admin — Portfolio Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --red:#D6251B; --red-dk:#a81914;
+      --charcoal:#1a1a1a; --char-md:#2c2c2c;
+      --gold:#C2AF75; --gold-lt:#d4c48e;
+      --border:#e6e4df; --offwhite:#f7f6f2; --muted:#666; --white:#fff;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Poppins',sans-serif;background:var(--offwhite);color:var(--charcoal);}
+    h1,h2,h3,.h{font-family:'Montserrat',sans-serif;}
+
+    /* topbar */
+    .topbar{background:var(--charcoal);border-bottom:3px solid var(--red);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+    .topbar-brand{font-family:'Montserrat',sans-serif;font-weight:900;font-size:18px;color:#fff;}
+    .topbar-brand span{color:var(--gold);}
+    .topbar-sub{font-size:11px;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.08em;margin-top:2px;}
+    .topbar-link{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid rgba(194,175,117,.3);padding:8px 18px;transition:background .15s;}
+    .topbar-link:hover{background:rgba(194,175,117,.1);}
+
+    /* layout */
+    .layout{max-width:1320px;margin:0 auto;padding:36px 24px;display:grid;grid-template-columns:380px 1fr;gap:32px;align-items:start;}
+    @media(max-width:900px){.layout{grid-template-columns:1fr;}}
+
+    /* card */
+    .card{background:var(--white);border:1px solid var(--border);padding:28px;}
+    .card-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--charcoal);margin-bottom:4px;}
+    .card-sub{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+    .bar{width:32px;height:3px;background:var(--red);margin:8px 0 18px;}
+
+    /* fields */
+    .field{margin-bottom:14px;}
+    label{display:block;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--charcoal);margin-bottom:5px;}
+    label .req{color:var(--red);}
+    input,select,textarea{width:100%;border:1.5px solid var(--border);padding:10px 13px;font-family:'Poppins',sans-serif;font-size:13px;background:var(--offwhite);color:var(--charcoal);outline:none;transition:border-color .15s,background .15s;appearance:none;-webkit-appearance:none;}
+    input:focus,select:focus,textarea:focus{border-color:var(--red);background:var(--white);}
+    select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5'%3E%3Cpath d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+    textarea{resize:vertical;}
+
+    /* tag chips */
+    .tag-input-row{display:flex;gap:8px;align-items:center;}
+    .tag-input-row select{flex:1;}
+    .tag-add-btn{flex-shrink:0;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;background:var(--charcoal);color:var(--white);border:none;cursor:pointer;white-space:nowrap;transition:background .15s;}
+    .tag-add-btn:hover{background:var(--char-md);}
+    .tag-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:0;}
+    .tag-chip{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px 5px 12px;background:var(--offwhite);border:1px solid var(--border);color:var(--charcoal);display:inline-flex;align-items:center;gap:6px;}
+    .tag-chip .rm{cursor:pointer;color:var(--red);font-size:13px;line-height:1;font-weight:900;}
+    .tag-chip .rm:hover{opacity:.7;}
+    .tag-section-badge{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:2px;}
+
+    /* drop zone */
+    .drop-zone{border:2px dashed var(--border);background:var(--offwhite);padding:24px 16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative;}
+    .drop-zone.drag-over{border-color:var(--red);background:#fff5f5;}
+    .drop-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+    .drop-icon{font-size:28px;margin-bottom:6px;}
+    .drop-label{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--charcoal);}
+    .drop-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+    .preview-img{width:100%;max-height:130px;object-fit:cover;display:none;margin-top:10px;border:1px solid var(--border);}
+
+    /* path display */
+    .path-display{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--muted);padding:8px 12px;background:var(--offwhite);border:1px solid var(--border);margin-top:8px;display:none;}
+    .path-display span{color:var(--charcoal);font-weight:700;}
+
+    /* buttons */
+    .btn{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,transform .1s,opacity .15s;}
+    .btn:hover:not(:disabled){transform:translateY(-1px);}
+    .btn:disabled{opacity:.5;cursor:not-allowed;}
+    .btn-red{background:var(--red);color:var(--white);padding:13px 24px;}
+    .btn-red:hover:not(:disabled){background:var(--red-dk);}
+    .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px 14px;font-size:10px;}
+    .btn-ghost:hover:not(:disabled){border-color:var(--red);color:var(--red);}
+    .btn-danger{background:transparent;border:1px solid #fca5a5;color:#dc2626;padding:7px 14px;font-size:10px;}
+    .btn-danger:hover:not(:disabled){background:#fef2f2;}
+    .btn-save{background:var(--charcoal);color:var(--white);padding:7px 14px;font-size:10px;}
+    .btn-save:hover:not(:disabled){background:var(--char-md);}
+    .btn-full{width:100%;justify-content:center;}
+
+    /* toast */
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--charcoal);color:var(--white);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;padding:14px 22px;border-left:4px solid var(--gold);box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:transform .3s cubic-bezier(.22,.68,0,1.2),opacity .3s;z-index:999;max-width:340px;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast.error{border-left-color:var(--red);}
+
+    /* section header / filter */
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;}
+    .filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+    .fpill{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+    .fpill:hover,.fpill.active-section{background:var(--red);border-color:var(--red);color:var(--white);}
+    .fpill.active{background:var(--charcoal);border-color:var(--charcoal);color:var(--white);}
+
+    /* project cards */
+    .project-list{display:flex;flex-direction:column;gap:10px;}
+    .project-card{background:var(--white);border:1px solid var(--border);transition:box-shadow .2s;}
+    .project-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07);}
+    .pcard-view{display:grid;grid-template-columns:90px 1fr auto;gap:0;align-items:stretch;}
+    .pcard-thumb{width:90px;height:72px;object-fit:cover;display:block;background:var(--charcoal);}
+    .pcard-thumb-empty{width:90px;height:72px;background:var(--offwhite);border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--border);flex-shrink:0;}
+    .pcard-info{padding:10px 14px;min-width:0;}
+    .pcard-crumb{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:3px;}
+    .pcard-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--charcoal);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .pcard-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
+    .pcard-tag{font-family:'Montserrat',sans-serif;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;background:var(--offwhite);border:1px solid var(--border);color:var(--muted);}
+    .pcard-actions{padding:8px 12px;display:flex;flex-direction:column;gap:5px;justify-content:center;flex-shrink:0;}
+
+    /* edit panel */
+    .pcard-edit{display:none;border-top:1px solid var(--border);padding:20px;}
+    .pcard-edit.open{display:block;}
+    .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .edit-grid .span2{grid-column:1/-1;}
+    .edit-photo-row{display:flex;align-items:center;gap:12px;margin-top:4px;}
+    .edit-current-img{width:80px;height:60px;object-fit:cover;border:1px solid var(--border);flex-shrink:0;}
+    .edit-photo-empty{width:80px;height:60px;background:var(--offwhite);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--border);font-size:18px;flex-shrink:0;}
+    .edit-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+    .edit-path-note{font-size:11px;color:var(--muted);margin-top:4px;}
+    .edit-path-note code{font-size:10px;}
+
+    /* empty state */
+    .empty-state{text-align:center;padding:48px 24px;color:var(--muted);}
+    .empty-state .icon{font-size:40px;margin-bottom:12px;}
+    .empty-state p{font-size:13px;}
+    a{color:inherit;text-decoration:none;}
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-brand">GLK <span>Admin</span></div>
+    <div class="topbar-sub">Portfolio Manager</div>
+  </div>
+  <a href="/" class="topbar-link">← View Website</a>
+</div>
+
+<div class="layout">
+
+  <!-- ══ LEFT: ADD FORM ══ -->
+  <div>
+    <div class="card">
+      <div class="card-title">Add New Project</div>
+      <div class="bar"></div>
+      <div class="card-sub">Fill in the project details and upload a photo. Add tags so this image also appears under other related services.</div>
+
+      <div class="field">
+        <label>Primary Section <span class="req">*</span></label>
+        <select id="addSection" onchange="updateSubsections('addSection','addSubsection'); updatePathDisplay();">
+          <option value="">Select section…</option>
+          <option value="residential">Residential</option>
+          <option value="commercial">Commercial</option>
+          <option value="services">Services</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Primary Sub-type <span class="req">*</span></label>
+        <select id="addSubsection" disabled onchange="updatePathDisplay()">
+          <option value="">Select section first…</option>
+        </select>
+      </div>
+
+      <div class="path-display" id="addPathDisplay">
+        Saves to: <span id="addPathText"></span>
+      </div>
+
+      <div class="field" style="margin-top:14px;">
+        <label>Project Title <span class="req">*</span></label>
+        <input id="addTitle" type="text" placeholder="e.g. Kitchen Remodel — Boca Raton" />
+      </div>
+
+      <div class="field">
+        <label>Location</label>
+        <input id="addLocation" type="text" placeholder="e.g. Coral Springs, FL" />
+      </div>
+
+      <div class="field">
+        <label>Description</label>
+        <textarea id="addDesc" rows="2" placeholder="Brief project description…"></textarea>
+      </div>
+
+      <!-- Tags -->
+      <div class="field">
+        <label>Also appears under (tags)</label>
+        <div class="tag-input-row">
+          <select id="addTagSection" onchange="updateSubsections('addTagSection','addTagSubsection')">
+            <option value="">Section…</option>
+            <option value="residential">Residential</option>
+            <option value="commercial">Commercial</option>
+            <option value="services">Services</option>
+          </select>
+          <select id="addTagSubsection" disabled>
+            <option value="">Sub-type…</option>
+          </select>
+          <button class="tag-add-btn" onclick="addTagChip('addTagSection','addTagSubsection','addTagChips','addPendingTags')">+ Add</button>
+        </div>
+        <div class="tag-chips" id="addTagChips"></div>
+      </div>
+
+      <div class="field">
+        <label>Project Photo</label>
+        <div class="drop-zone" id="addDropZone">
+          <input type="file" id="addFileInput" accept="image/*" />
+          <div class="drop-icon">🖼️</div>
+          <div class="drop-label">Drag & drop or click to choose</div>
+          <div class="drop-sub">JPG, PNG, WEBP — max 10 MB</div>
+        </div>
+        <img id="addPreview" class="preview-img" alt="" />
+      </div>
+
+      <button class="btn btn-red btn-full" id="addBtn">Add to Portfolio</button>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT: PROJECT LIST ══ -->
+  <div>
+    <div class="section-header">
+      <div>
+        <div class="h" style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:14px;letter-spacing:.12em;text-transform:uppercase;">Current Projects</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;" id="countLabel">Loading…</div>
+      </div>
+      <button class="btn btn-ghost" onclick="loadProjects()">↺ Refresh</button>
+    </div>
+
+    <div class="filter-bar" id="sectionFilter">
+      <button class="fpill active-section" data-s="all">All</button>
+      <button class="fpill" data-s="residential">Residential</button>
+      <button class="fpill" data-s="commercial">Commercial</button>
+      <button class="fpill" data-s="services">Services</button>
+    </div>
+    <div class="filter-bar" id="subFilter" style="margin-bottom:18px;"></div>
+
+    <div id="projectList" class="project-list">
+      <div class="empty-state"><div class="icon">⏳</div><p>Loading…</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Taxonomy ──────────────────────────────────────────────────────────────────
+const TAXONOMY = {
+  residential:[
+    {id:'new-construction', label:'New Construction'},
+    {id:'additions',        label:'Additions'},
+    {id:'remodeling',       label:'Remodeling'},
+    {id:'decks-docks',      label:'Decks & Docks'},
+    {id:'kitchens',         label:'Kitchens'},
+    {id:'summer-kitchens',  label:'Summer Kitchens'},
+    {id:'bathrooms',        label:'Bathrooms'},
+    {id:'moldings-trims',   label:'Moldings & Trims'},
+  ],
+  commercial:[
+    {id:'concrete-restoration',  label:'Concrete Restoration'},
+    {id:'commercial-renovation', label:'Commercial Renovation'},
+  ],
+  services:[
+    {id:'design-build',    label:'Design Build'},
+    {id:'roofing',         label:'Roofing'},
+    {id:'stucco',          label:'Stucco'},
+    {id:'windows',         label:'Windows'},
+    {id:'tile-flooring',   label:'Tile Flooring'},
+    {id:'wood-flooring',   label:'Wood Flooring'},
+    {id:'plumbing',        label:'Plumbing'},
+    {id:'pavers',          label:'Pavers'},
+    {id:'framing-drywall', label:'Framing & Drywall'},
+    {id:'pools',           label:'Pools'},
+    {id:'electrical',      label:'Electrical'},
+  ],
+};
+
+function labelFor(sec,sub){
+  return ((TAXONOMY[sec]||[]).find(x=>x.id===sub)||{label:sub}).label;
+}
+
+// ── Subsection cascade ────────────────────────────────────────────────────────
+function updateSubsections(secId, subId, defaultSub=''){
+  const sec = document.getElementById(secId).value;
+  const subSel = document.getElementById(subId);
+  if(!sec||!TAXONOMY[sec]){
+    subSel.innerHTML='<option value="">Select section first…</option>';
+    subSel.disabled=true; return;
+  }
+  subSel.disabled=false;
+  subSel.innerHTML='<option value="">Select sub-type…</option>'+
+    TAXONOMY[sec].map(s=>`<option value="${s.id}"${s.id===defaultSub?' selected':''}>${s.label}</option>`).join('');
+}
+
+function updatePathDisplay(){
+  const sec=document.getElementById('addSection').value;
+  const sub=document.getElementById('addSubsection').value;
+  const pd=document.getElementById('addPathDisplay');
+  const pt=document.getElementById('addPathText');
+  if(sec&&sub){pd.style.display='block'; pt.textContent=`images/portfolio/${sec}/${sub}/`;}
+  else pd.style.display='none';
+}
+
+// ── Tag chips ─────────────────────────────────────────────────────────────────
+// pendingTags is stored on a JS object keyed by chip container id
+const _pendingTags={};
+
+function addTagChip(secId, subId, chipContainerId, tagsKey){
+  const sec=document.getElementById(secId).value;
+  const sub=document.getElementById(subId).value;
+  if(!sec||!sub){showToast('Select section and sub-type first',true); return;}
+
+  if(!_pendingTags[tagsKey]) _pendingTags[tagsKey]=[];
+  const already=_pendingTags[tagsKey].some(t=>t.section===sec&&t.sub===sub);
+  if(already){showToast('Tag already added',true); return;}
+
+  _pendingTags[tagsKey].push({section:sec, sub});
+  renderTagChips(chipContainerId, tagsKey);
+  document.getElementById(secId).value='';
+  document.getElementById(subId).innerHTML='<option value="">Select section first…</option>';
+  document.getElementById(subId).disabled=true;
+}
+
+function removeTag(tagsKey, idx, chipContainerId){
+  if(!_pendingTags[tagsKey]) return;
+  _pendingTags[tagsKey].splice(idx,1);
+  renderTagChips(chipContainerId, tagsKey);
+}
+
+function renderTagChips(chipContainerId, tagsKey){
+  const tags=_pendingTags[tagsKey]||[];
+  const container=document.getElementById(chipContainerId);
+  if(!container) return;
+  container.innerHTML=tags.map((t,i)=>`
+    <span class="tag-chip">
+      <span class="tag-section-badge">${t.section.charAt(0).toUpperCase()+t.section.slice(1)}</span>
+      ${labelFor(t.section,t.sub)}
+      <span class="rm" onclick="removeTag('${tagsKey}',${i},'${chipContainerId}')">&times;</span>
+    </span>`).join('');
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function showToast(msg,isError=false){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show'+(isError?' error':'');
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>{t.className='toast';},3400);
+}
+
+// ── File → dataURL ────────────────────────────────────────────────────────────
+function fileToDataUrl(file){
+  return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=rej;r.readAsDataURL(file);});
+}
+
+// ── Add form: drop zone ───────────────────────────────────────────────────────
+let addPendingFile=null;
+const addDz=document.getElementById('addDropZone');
+const addFi=document.getElementById('addFileInput');
+const addPv=document.getElementById('addPreview');
+function handleAddFile(f){if(!f)return;addPendingFile=f;const r=new FileReader();r.onload=e=>{addPv.src=e.target.result;addPv.style.display='block';};r.readAsDataURL(f);}
+addFi.addEventListener('change',e=>handleAddFile(e.target.files[0]));
+addDz.addEventListener('dragover',e=>{e.preventDefault();addDz.classList.add('drag-over');});
+addDz.addEventListener('dragleave',()=>addDz.classList.remove('drag-over'));
+addDz.addEventListener('drop',e=>{e.preventDefault();addDz.classList.remove('drag-over');handleAddFile(e.dataTransfer.files[0]);});
+
+// ── Add project ───────────────────────────────────────────────────────────────
+document.getElementById('addBtn').addEventListener('click',async()=>{
+  const section=document.getElementById('addSection').value;
+  const subsection=document.getElementById('addSubsection').value;
+  const title=document.getElementById('addTitle').value.trim();
+  const location=document.getElementById('addLocation').value.trim();
+  const desc=document.getElementById('addDesc').value.trim();
+  const tags=_pendingTags['addPendingTags']||[];
+
+  if(!section) return showToast('Please select a section',true);
+  if(!subsection) return showToast('Please select a sub-type',true);
+  if(!title) return showToast('Please enter a project title',true);
+
+  const btn=document.getElementById('addBtn');
+  btn.textContent='Saving…'; btn.disabled=true;
+  try{
+    const body={section,subsection,title,location,description:desc,tags};
+    if(addPendingFile){body.dataUrl=await fileToDataUrl(addPendingFile);body.filename=addPendingFile.name;}
+    const res=await fetch('/api/portfolio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!res.ok) throw new Error((await res.json()).error||'Upload failed');
+    showToast('✓ Project added successfully!');
+    // reset form
+    ['addSection','addSubsection','addTagSection','addTagSubsection'].forEach(id=>{document.getElementById(id).value='';});
+    document.getElementById('addSubsection').disabled=true;
+    document.getElementById('addTagSubsection').disabled=true;
+    document.getElementById('addPathDisplay').style.display='none';
+    document.getElementById('addTitle').value='';
+    document.getElementById('addLocation').value='';
+    document.getElementById('addDesc').value='';
+    _pendingTags['addPendingTags']=[];
+    renderTagChips('addTagChips','addPendingTags');
+    addPendingFile=null; addPv.style.display='none'; addPv.src='';
+    loadProjects();
+  }catch(e){showToast('Error: '+e.message,true);}
+  finally{btn.textContent='Add to Portfolio';btn.disabled=false;}
+});
+
+// ── Filter state ──────────────────────────────────────────────────────────────
+let allProjects=[],activeSection='all',activeSub='all';
+
+function renderFilter(){
+  document.querySelectorAll('#sectionFilter .fpill').forEach(p=>p.classList.toggle('active-section',p.dataset.s===activeSection));
+  const subBar=document.getElementById('subFilter');
+  if(activeSection==='all'||!TAXONOMY[activeSection]){subBar.innerHTML='';return;}
+  const subs=TAXONOMY[activeSection];
+  const cap=activeSection.charAt(0).toUpperCase()+activeSection.slice(1);
+  subBar.innerHTML=`<button class="fpill${activeSub==='all'?' active':''}" data-sub="all">All ${cap}</button>`+
+    subs.map(s=>`<button class="fpill${activeSub===s.id?' active':''}" data-sub="${s.id}">${s.label}</button>`).join('');
+  subBar.querySelectorAll('.fpill').forEach(p=>p.addEventListener('click',()=>{activeSub=p.dataset.sub;renderFilter();renderProjects();}));
+}
+
+document.getElementById('sectionFilter').addEventListener('click',e=>{
+  if(!e.target.matches('.fpill')) return;
+  activeSection=e.target.dataset.s; activeSub='all';
+  renderFilter(); renderProjects();
+});
+
+// ── Render project list ───────────────────────────────────────────────────────
+function renderProjects(){
+  let projects=allProjects;
+  if(activeSection!=='all') projects=projects.filter(p=>p.section===activeSection);
+  if(activeSub!=='all') projects=projects.filter(p=>p.subsection===activeSub||((p.tags||[]).some(t=>t.sub===activeSub)));
+  document.getElementById('countLabel').textContent=`${projects.length} of ${allProjects.length} project${allProjects.length!==1?'s':''} shown`;
+  const list=document.getElementById('projectList');
+  if(projects.length===0){list.innerHTML=`<div class="empty-state"><div class="icon">📷</div><p>No projects in this category yet.</p></div>`;return;}
+  list.innerHTML=projects.map(p=>buildProjectCard(p)).join('');
+  wireProjectCard(list);
+}
+
+function buildProjectCard(p){
+  const thumb=p.image?`<img class="pcard-thumb" src="${p.image}?t=${Date.now()}" alt="${p.title}" />`:`<div class="pcard-thumb-empty">📷</div>`;
+  const crumb=`${p.section?p.section.charAt(0).toUpperCase()+p.section.slice(1):''} › ${labelFor(p.section,p.subsection)}`;
+  const tagsHtml=(p.tags||[]).length?`<div class="pcard-tags">${(p.tags||[]).map(t=>`<span class="pcard-tag">${labelFor(t.section,t.sub)}</span>`).join('')}</div>`:'';
+
+  const subOpts=(TAXONOMY[p.section]||[]).map(s=>`<option value="${s.id}"${s.id===p.subsection?' selected':''}>${s.label}</option>`).join('');
+  const secOpts=['residential','commercial','services'].map(s=>`<option value="${s}"${s===p.section?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('');
+
+  const currentImg=p.image?`<img class="edit-current-img" src="${p.image}?t=${Date.now()}" alt="current" />`:`<div class="edit-photo-empty">📷</div>`;
+
+  // existing tags for edit panel
+  const editTagsKey=`tags_${p.id}`;
+  if(!_pendingTags[editTagsKey]) _pendingTags[editTagsKey]=[...(p.tags||[])];
+
+  return `
+  <div class="project-card" id="card-${p.id}">
+    <div class="pcard-view">
+      ${thumb}
+      <div class="pcard-info">
+        <div class="pcard-crumb">${crumb}</div>
+        <div class="pcard-title" title="${p.title}">${p.title}</div>
+        ${p.location?`<div style="font-size:11px;color:var(--muted);margin-top:1px;">${p.location}</div>`:''}
+        ${tagsHtml}
+      </div>
+      <div class="pcard-actions">
+        <button class="btn btn-ghost edit-toggle" data-id="${p.id}">✏️ Edit</button>
+        <button class="btn btn-danger delete-btn" data-id="${p.id}">🗑 Delete</button>
+      </div>
+    </div>
+
+    <div class="pcard-edit" id="edit-${p.id}">
+      <div class="edit-grid">
+        <div>
+          <label>Section</label>
+          <select class="edit-section" data-id="${p.id}">${secOpts}</select>
+        </div>
+        <div>
+          <label>Sub-type</label>
+          <select class="edit-subsection" data-id="${p.id}">${subOpts}</select>
+        </div>
+        <div class="span2">
+          <label>Title</label>
+          <input class="edit-title" type="text" value="${p.title.replace(/"/g,'&quot;')}" />
+        </div>
+        <div>
+          <label>Location</label>
+          <input class="edit-location" type="text" value="${(p.location||'').replace(/"/g,'&quot;')}" />
+        </div>
+        <div class="span2">
+          <label>Description</label>
+          <textarea class="edit-desc" rows="2">${p.description||''}</textarea>
+        </div>
+
+        <!-- Tags editor -->
+        <div class="span2">
+          <label>Also appears under (tags)</label>
+          <div class="tag-input-row">
+            <select id="etSec_${p.id}" onchange="updateSubsections('etSec_${p.id}','etSub_${p.id}')">
+              <option value="">Section…</option>
+              <option value="residential">Residential</option>
+              <option value="commercial">Commercial</option>
+              <option value="services">Services</option>
+            </select>
+            <select id="etSub_${p.id}" disabled><option value="">Sub-type…</option></select>
+            <button class="tag-add-btn" onclick="addTagChip('etSec_${p.id}','etSub_${p.id}','etChips_${p.id}','tags_${p.id}')">+ Add</button>
+          </div>
+          <div class="tag-chips" id="etChips_${p.id}"></div>
+        </div>
+
+        <div class="span2">
+          <label>Photo</label>
+          <div class="edit-photo-row">
+            ${currentImg}
+            <div>
+              <label class="btn btn-ghost" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-bottom:0;">
+                📷 Replace Photo
+                <input type="file" class="row-photo-input" data-id="${p.id}" accept="image/*" style="display:none;" />
+              </label>
+              <p class="edit-path-note">Saves to: <code>images/portfolio/${p.section}/${p.subsection}/</code></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="edit-actions">
+        <button class="btn btn-save save-edit-btn" data-id="${p.id}">✓ Save Changes</button>
+        <button class="btn btn-ghost edit-toggle" data-id="${p.id}">Cancel</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function wireProjectCard(list){
+  // Render tag chips for each edit panel
+  list.querySelectorAll('.pcard-edit').forEach(panel=>{
+    const id=panel.id.replace('edit-','');
+    const key=`tags_${id}`;
+    renderTagChips(`etChips_${id}`,key);
+  });
+
+  // Edit toggles
+  list.querySelectorAll('.edit-toggle').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const panel=document.getElementById('edit-'+btn.dataset.id);
+      const isOpen=panel.classList.contains('open');
+      document.querySelectorAll('.pcard-edit.open').forEach(el=>el.classList.remove('open'));
+      document.querySelectorAll('.edit-toggle').forEach(b=>{if(b.textContent.includes('Close')||b.textContent.includes('Cancel'))b.textContent='✏️ Edit';});
+      if(!isOpen){panel.classList.add('open');list.querySelectorAll(`.edit-toggle[data-id="${btn.dataset.id}"]`).forEach(b=>b.textContent='✕ Cancel');}
+    });
+  });
+
+  // Save
+  list.querySelectorAll('.save-edit-btn').forEach(btn=>{
+    btn.addEventListener('click',async()=>{
+      const id=btn.dataset.id;
+      const panel=document.getElementById('edit-'+id);
+      const data={
+        title:panel.querySelector('.edit-title').value.trim(),
+        location:panel.querySelector('.edit-location').value.trim(),
+        description:panel.querySelector('.edit-desc').value.trim(),
+        section:panel.querySelector('.edit-section').value,
+        subsection:panel.querySelector('.edit-subsection').value,
+        tags:_pendingTags[`tags_${id}`]||[],
+      };
+      if(!data.title) return showToast('Title is required',true);
+      btn.textContent='Saving…'; btn.disabled=true;
+      try{
+        const res=await fetch(`/api/portfolio/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+        if(!res.ok) throw new Error((await res.json()).error||'Save failed');
+        showToast('✓ Project updated!'); loadProjects();
+      }catch(e){showToast('Error: '+e.message,true);}
+      finally{btn.textContent='✓ Save Changes';btn.disabled=false;}
+    });
+  });
+
+  // Photo upload
+  list.querySelectorAll('.row-photo-input').forEach(input=>{
+    input.addEventListener('change',async e=>{
+      const file=e.target.files[0]; if(!file) return;
+      try{
+        const dataUrl=await fileToDataUrl(file);
+        const res=await fetch(`/api/portfolio/${input.dataset.id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({dataUrl,filename:file.name})});
+        if(!res.ok) throw new Error((await res.json()).error||'Upload failed');
+        showToast('✓ Photo updated!'); loadProjects();
+      }catch(err){showToast('Error: '+err.message,true);}
+    });
+  });
+
+  // Delete
+  list.querySelectorAll('.delete-btn').forEach(btn=>{
+    btn.addEventListener('click',async()=>{
+      if(!confirm('Remove this project from the portfolio?')) return;
+      try{
+        const res=await fetch(`/api/portfolio/${btn.dataset.id}`,{method:'DELETE'});
+        if(!res.ok) throw new Error('Delete failed');
+        showToast('Project removed.'); loadProjects();
+      }catch(err){showToast('Error: '+err.message,true);}
+    });
+  });
+
+  // Section cascade in edit panels
+  list.querySelectorAll('.edit-section').forEach(sel=>{
+    sel.addEventListener('change',()=>{
+      const id=sel.dataset.id;
+      const subSel=list.querySelector(`.edit-subsection[data-id="${id}"]`);
+      const sec=sel.value;
+      if(!sec||!TAXONOMY[sec]){subSel.innerHTML='<option value="">…</option>';subSel.disabled=true;return;}
+      subSel.disabled=false;
+      subSel.innerHTML=TAXONOMY[sec].map(s=>`<option value="${s.id}">${s.label}</option>`).join('');
+    });
+  });
+}
+
+// ── Load from API ─────────────────────────────────────────────────────────────
+async function loadProjects(){
+  try{
+    const res=await fetch('/api/portfolio');
+    const data=await res.json();
+    allProjects=data.projects||[];
+    // Sync pending tag state for edit panels (reset on reload)
+    allProjects.forEach(p=>{_pendingTags[`tags_${p.id}`]=[...(p.tags||[])];});
+    renderFilter(); renderProjects();
+  }catch{
+    document.getElementById('projectList').innerHTML=`<div class="empty-state"><div class="icon">⚠️</div><p>Could not load projects. Is the server running?</p></div>`;
+  }
+}
+
+// Detect Vercel (no local server = mutations return 503)
+let isReadOnly = false;
+
+async function detectEnvironment() {
+  try {
+    const res = await fetch('/api/portfolio', { method: 'POST', headers: {'Content-Type':'application/json'}, body: '{}' });
+    if (res.status === 503) {
+      isReadOnly = true;
+      showReadOnlyBanner();
+    }
+  } catch { /* local server — writable */ }
+}
+
+function showReadOnlyBanner() {
+  const banner = document.createElement('div');
+  banner.style.cssText = 'background:#fffbeb;border-bottom:3px solid #ca8a04;padding:12px 32px;font-family:Montserrat,sans-serif;font-size:12px;font-weight:600;letter-spacing:.04em;color:#713f12;display:flex;align-items:center;gap:12px;';
+  banner.innerHTML = '⚠️ <strong>Read-only mode:</strong>&nbsp;You are viewing the live site. To upload or edit projects, run <code style="background:#fef3c7;padding:2px 6px;border-radius:3px;">node serve.mjs</code> locally and open <code style="background:#fef3c7;padding:2px 6px;border-radius:3px;">localhost:3000/admin</code>.';
+  document.body.insertBefore(banner, document.body.children[1]);
+  // Disable add button
+  const addBtn = document.getElementById('addBtn');
+  if (addBtn) { addBtn.disabled = true; addBtn.textContent = 'Upload requires local server'; }
+}
+
+detectEnvironment();
+loadProjects();
+</script>
+</body>
+</html>

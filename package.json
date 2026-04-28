@@ -1,16 +1,18 @@
 {
   "name": "glk",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "GLK Construction website",
+  "main": "serve.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node serve.mjs",
+    "dev": "node serve.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "puppeteer": "^24.42.0"
   }
 }

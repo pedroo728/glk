@@ -112,17 +112,23 @@
 
     /* Dropdown */
     .dropdown { position: relative; }
-    .dropdown:hover .dropdown-menu { display: block; }
     .dropdown-menu {
       display: none;
       position: absolute;
-      top: calc(100% + 8px);
+      top: 100%;
       left: 0;
       z-index: 200;
       min-width: 220px;
       background: var(--white);
       border-top: 3px solid var(--red);
       box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      /* Invisible top padding bridges the gap so hover stays alive */
+      padding-top: 8px;
+    }
+    .dropdown-menu::before {
+      content: '';
+      display: block;
+      height: 0;
     }
     .dropdown-menu a {
       display: block;
@@ -449,6 +455,24 @@
       border-color: var(--red);
       color: var(--white);
     }
+    .sub-tab {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sub-tab:hover, .sub-tab.active {
+      background: var(--charcoal);
+      border-color: var(--charcoal);
+      color: var(--white);
+    }
 
     /* Portfolio Grid (3-column like Vista) */
     .portfolio-grid {
@@ -556,11 +580,88 @@
       cursor: pointer;
     }
     .service-item:hover { border-left-color: var(--red); color: var(--red); }
+    .service-item.active {
+      border-left-color: var(--red);
+      background: var(--red);
+      color: var(--white);
+    }
+
+    .mosaic-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+      transition: opacity 0.2s;
+    }
+    .mosaic-hint {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-top: 14px;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .mosaic-hint.hidden { opacity: 0; }
+
+    /* Mosaic image fade-swap */
+    .mosaic-img img {
+      transition: opacity 0.3s, transform 0.4s;
+    }
+    .mosaic-img.swapping img {
+      opacity: 0;
+      transform: scale(1.04);
+    }
 
     .services-cta {
       margin-top: 32px;
       display: flex;
       gap: 16px;
+    }
+
+    /* Mobile service picker */
+    .services-mobile-picker { display: none; margin-top: 28px; }
+    .services-mobile-label {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+    .services-mobile-select {
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      color: var(--charcoal);
+      background: var(--white);
+      border: 2px solid var(--border);
+      padding: 12px 16px;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .services-mobile-select:focus { border-color: var(--red); }
+    .services-mobile-mosaic {
+      margin-top: 20px;
+      display: grid;
+    }
+    /* Desktop mosaic column */
+    .services-desktop-mosaic { display: block; }
+
+    @media (max-width: 900px) {
+      /* Hide the desktop clickable list and mosaic column */
+      #servicesListDesktop { display: none; }
+      .services-desktop-mosaic { display: none; }
+      /* Show the mobile picker */
+      .services-mobile-picker { display: block; }
+      /* Single-column services layout already handled by services-inner media query */
     }
 
     /* Image mosaic (like Vista's 2x2 gallery) */
@@ -1070,49 +1171,50 @@
         <a href="#reviews" class="nav-link">Reviews</a>
 
         <div class="dropdown">
-          <button class="nav-link" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;">
+          <button class="nav-link" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;" onclick="goPortfolio('residential','all')">
             Residential
             <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div class="dropdown-menu">
-            <a href="#">New Construction</a>
-            <a href="#">Additions</a>
-            <a href="#">Remodeling</a>
-            <a href="#">Decks &amp; Docks</a>
-            <a href="#">Kitchens</a>
-            <a href="#">Summer Kitchens</a>
-            <a href="#">Bathrooms</a>
-            <a href="#">Moldings &amp; Trims</a>
+            <a href="#portfolio" onclick="goPortfolio('residential','new-construction')">New Construction</a>
+            <a href="#portfolio" onclick="goPortfolio('residential','additions')">Additions</a>
+            <a href="#portfolio" onclick="goPortfolio('residential','remodeling')">Remodeling</a>
+            <a href="#portfolio" onclick="goPortfolio('residential','decks-docks')">Decks &amp; Docks</a>
+            <a href="#portfolio" onclick="goPortfolio('residential','kitchens')">Kitchens</a>
+            <a href="#portfolio" onclick="goPortfolio('residential','summer-kitchens')">Summer Kitchens</a>
+            <a href="#portfolio" onclick="goPortfolio('residential','bathrooms')">Bathrooms</a>
+            <a href="#portfolio" onclick="goPortfolio('residential','moldings-trims')">Moldings &amp; Trims</a>
           </div>
         </div>
 
         <div class="dropdown">
-          <button class="nav-link" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;">
+          <button class="nav-link" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;" onclick="goPortfolio('commercial','all')">
             Commercial
             <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div class="dropdown-menu">
-            <a href="#">Concrete Restoration</a>
-            <a href="#">Commercial Renovation</a>
+            <a href="#portfolio" onclick="goPortfolio('commercial','concrete-restoration')">Concrete Restoration</a>
+            <a href="#portfolio" onclick="goPortfolio('commercial','commercial-renovation')">Commercial Renovation</a>
           </div>
         </div>
 
         <div class="dropdown">
-          <button class="nav-link" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;">
+          <button class="nav-link" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;" onclick="goPortfolio('services','all')">
             Services
             <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div class="dropdown-menu">
-            <a href="#">Design Build</a>
-            <a href="#">Roofing</a>
-            <a href="#">Stucco</a>
-            <a href="#">Windows</a>
-            <a href="#">Tile &amp; Wood Flooring</a>
-            <a href="#">Plumbing</a>
-            <a href="#">Pavers</a>
-            <a href="#">Framing &amp; Drywall</a>
-            <a href="#">Pools</a>
-            <a href="#">Electrical</a>
+            <a href="#portfolio" onclick="goPortfolio('services','design-build')">Design Build</a>
+            <a href="#portfolio" onclick="goPortfolio('services','roofing')">Roofing</a>
+            <a href="#portfolio" onclick="goPortfolio('services','stucco')">Stucco</a>
+            <a href="#portfolio" onclick="goPortfolio('services','windows')">Windows</a>
+            <a href="#portfolio" onclick="goPortfolio('services','tile-flooring')">Tile Flooring</a>
+            <a href="#portfolio" onclick="goPortfolio('services','wood-flooring')">Wood Flooring</a>
+            <a href="#portfolio" onclick="goPortfolio('services','plumbing')">Plumbing</a>
+            <a href="#portfolio" onclick="goPortfolio('services','pavers')">Pavers</a>
+            <a href="#portfolio" onclick="goPortfolio('services','framing-drywall')">Framing &amp; Drywall</a>
+            <a href="#portfolio" onclick="goPortfolio('services','pools')">Pools</a>
+            <a href="#portfolio" onclick="goPortfolio('services','electrical')">Electrical</a>
           </div>
         </div>
 
@@ -1182,7 +1284,7 @@
         <div class="hero-video-outer">
           <div class="hero-video-wrap">
             <iframe
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&loop=1&playlist=dQw4w9WgXcQ"
               title="GLK Construction"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -1238,12 +1340,15 @@
         <p class="section-body">From new construction to detailed renovations — residential and commercial — our portfolio speaks for itself.</p>
       </div>
 
-      <div class="filter-tabs">
-        <button class="filter-tab active" data-filter="all">All Projects</button>
-        <button class="filter-tab" data-filter="residential">Residential</button>
-        <button class="filter-tab" data-filter="commercial">Commercial</button>
-        <button class="filter-tab" data-filter="renovation">Renovation</button>
+      <!-- Section tabs -->
+      <div class="filter-tabs" id="sectionTabs">
+        <button class="filter-tab active" data-section="all">All Projects</button>
+        <button class="filter-tab" data-section="residential">Residential</button>
+        <button class="filter-tab" data-section="commercial">Commercial</button>
+        <button class="filter-tab" data-section="services">Services</button>
       </div>
+      <!-- Subsection chips (appear when a section is selected) -->
+      <div class="filter-tabs" id="subTabs" style="margin-top:-24px; margin-bottom:32px; display:none;"></div>
 
       <div class="portfolio-grid">
         <div class="portfolio-card" data-cat="commercial">
@@ -1321,7 +1426,7 @@
     </div>
   </section>
 
-  <!-- ══ SERVICES SECTION (like Vista's OUR SERVICES with image gallery) ══ -->
+  <!-- ══ SERVICES SECTION ══ -->
   <section id="services" class="services-section">
     <div class="services-inner">
       <div>
@@ -1334,24 +1439,57 @@
         <p style="font-size:14px; color:var(--muted); line-height:1.8; margin-top:16px; max-width:520px;">
           With over 30 years of combined experience, our licensed professionals seamlessly handle projects of all sizes for homeowners, developers, and businesses across South Florida.
         </p>
-        <div class="services-list">
-          <div class="service-item">New Construction</div>
-          <div class="service-item">Additions</div>
-          <div class="service-item">Remodeling</div>
-          <div class="service-item">Decks &amp; Docks</div>
-          <div class="service-item">Kitchens</div>
-          <div class="service-item">Summer Kitchens</div>
-          <div class="service-item">Bathrooms</div>
-          <div class="service-item">Moldings &amp; Trims</div>
-          <div class="service-item">Concrete Restoration</div>
-          <div class="service-item">Commercial Renovation</div>
-          <div class="service-item">Roofing</div>
-          <div class="service-item">Stucco</div>
-          <div class="service-item">Pools</div>
-          <div class="service-item">Electrical</div>
-          <div class="service-item">Plumbing</div>
-          <div class="service-item">Design Build</div>
+
+        <!-- Desktop: clickable list -->
+        <div class="services-list" id="servicesListDesktop">
+          <div class="service-item" data-section="residential" data-sub="new-construction">New Construction</div>
+          <div class="service-item" data-section="residential" data-sub="additions">Additions</div>
+          <div class="service-item" data-section="residential" data-sub="remodeling">Remodeling</div>
+          <div class="service-item" data-section="residential" data-sub="decks-docks">Decks &amp; Docks</div>
+          <div class="service-item" data-section="residential" data-sub="kitchens">Kitchens</div>
+          <div class="service-item" data-section="residential" data-sub="summer-kitchens">Summer Kitchens</div>
+          <div class="service-item" data-section="residential" data-sub="bathrooms">Bathrooms</div>
+          <div class="service-item" data-section="residential" data-sub="moldings-trims">Moldings &amp; Trims</div>
+          <div class="service-item" data-section="commercial" data-sub="concrete-restoration">Concrete Restoration</div>
+          <div class="service-item" data-section="commercial" data-sub="commercial-renovation">Commercial Renovation</div>
+          <div class="service-item" data-section="services" data-sub="roofing">Roofing</div>
+          <div class="service-item" data-section="services" data-sub="stucco">Stucco</div>
+          <div class="service-item" data-section="services" data-sub="pools">Pools</div>
+          <div class="service-item" data-section="services" data-sub="electrical">Electrical</div>
+          <div class="service-item" data-section="services" data-sub="plumbing">Plumbing</div>
+          <div class="service-item" data-section="services" data-sub="design-build">Design Build</div>
         </div>
+        <!-- Mobile: dropdown selector (hidden on desktop) -->
+        <div class="services-mobile-picker">
+          <label class="services-mobile-label" for="servicesMobileSelect">Browse by Service</label>
+          <select id="servicesMobileSelect" class="services-mobile-select">
+            <option value="">Select a service…</option>
+            <option value="residential|new-construction">New Construction</option>
+            <option value="residential|additions">Additions</option>
+            <option value="residential|remodeling">Remodeling</option>
+            <option value="residential|decks-docks">Decks &amp; Docks</option>
+            <option value="residential|kitchens">Kitchens</option>
+            <option value="residential|summer-kitchens">Summer Kitchens</option>
+            <option value="residential|bathrooms">Bathrooms</option>
+            <option value="residential|moldings-trims">Moldings &amp; Trims</option>
+            <option value="commercial|concrete-restoration">Concrete Restoration</option>
+            <option value="commercial|commercial-renovation">Commercial Renovation</option>
+            <option value="services|roofing">Roofing</option>
+            <option value="services|stucco">Stucco</option>
+            <option value="services|pools">Pools</option>
+            <option value="services|electrical">Electrical</option>
+            <option value="services|plumbing">Plumbing</option>
+            <option value="services|design-build">Design Build</option>
+          </select>
+          <!-- Mobile mosaic (shown below dropdown on small screens) -->
+          <div class="image-mosaic services-mobile-mosaic" id="serviceMosaicMobile">
+            <div class="mosaic-img"><img src="https://placehold.co/640x480/1a1a1a/C2AF75?text=Select+a+service" alt="" /></div>
+            <div class="mosaic-img"><img src="https://placehold.co/640x480/2c2c2c/C2AF75?text=above" alt="" /></div>
+            <div class="mosaic-img"><img src="https://placehold.co/640x480/3d3d3d/C2AF75?text=to+see" alt="" /></div>
+            <div class="mosaic-img"><img src="https://placehold.co/640x480/1a1a1a/D6251B?text=photos" alt="" /></div>
+          </div>
+        </div>
+
         <div class="services-cta">
           <a href="#contact" class="btn-primary">Get a Free Estimate</a>
           <a href="tel:9549345250" class="btn-gold">Call Us Now</a>
@@ -1361,20 +1499,16 @@
         </div>
       </div>
 
-      <!-- 2x2 Image Mosaic like Vista -->
-      <div class="image-mosaic">
-        <div class="mosaic-img">
-          <img src="https://placehold.co/640x480/1a1a1a/C2AF75?text=GLK+Work+1" alt="GLK Construction work" />
+      <!-- Desktop: 2x2 Image Mosaic (hidden on mobile) -->
+      <div class="services-desktop-mosaic">
+        <div class="mosaic-label" id="mosaicLabel">Our Work</div>
+        <div class="image-mosaic" id="serviceMosaic">
+          <div class="mosaic-img"><img src="https://placehold.co/640x480/1a1a1a/C2AF75?text=GLK+Work" alt="GLK Construction work" /></div>
+          <div class="mosaic-img"><img src="https://placehold.co/640x480/2c2c2c/C2AF75?text=GLK+Work" alt="GLK Construction work" /></div>
+          <div class="mosaic-img"><img src="https://placehold.co/640x480/3d3d3d/C2AF75?text=GLK+Work" alt="GLK Construction work" /></div>
+          <div class="mosaic-img"><img src="https://placehold.co/640x480/1a1a1a/D6251B?text=GLK+Work" alt="GLK Construction work" /></div>
         </div>
-        <div class="mosaic-img">
-          <img src="https://placehold.co/640x480/2c2c2c/C2AF75?text=GLK+Work+2" alt="GLK Construction work" />
-        </div>
-        <div class="mosaic-img">
-          <img src="https://placehold.co/640x480/3d3d3d/C2AF75?text=GLK+Work+3" alt="GLK Construction work" />
-        </div>
-        <div class="mosaic-img">
-          <img src="https://placehold.co/640x480/1a1a1a/D6251B?text=GLK+Work+4" alt="GLK Construction work" />
-        </div>
+        <p class="mosaic-hint">← Click a service to see related projects</p>
       </div>
     </div>
   </section>
@@ -1401,7 +1535,7 @@
           At GLK Construction, our mission is simple: provide the best client experience and keep your property consistently looking and feeling like new.
         </p>
         <div class="before-after-box">
-          <img class="ba-img" src="https://placehold.co/1000x620/1a1a1a/C2AF75?text=Before+%2F+After" alt="Before and After" />
+          <img class="ba-img" src="/images/team/beforeandafter.webp" alt="Before and After" />
           <div class="ba-label">Before / After</div>
         </div>
         <div style="margin-top:24px;">
@@ -1496,8 +1630,13 @@
         </div>
       </div>
       <div>
-        <div style="border:1px solid var(--border); box-shadow:8px 8px 0 var(--gold);">
-          <img src="https://placehold.co/640x480/1a1a1a/C2AF75?text=GLK+Construction+Team" alt="GLK Construction team" style="width:100%; display:block;" />
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div style="border:1px solid var(--border); box-shadow:6px 6px 0 var(--gold); overflow:hidden;">
+            <img src="/images/team/team1.jpeg" alt="GLK Construction team" style="width:100%; height:100%; object-fit:cover; display:block;" />
+          </div>
+          <div style="border:1px solid var(--border); box-shadow:6px 6px 0 var(--gold); overflow:hidden;">
+            <img src="/images/team/team2.jpeg" alt="GLK Construction team" style="width:100%; height:100%; object-fit:cover; display:block;" />
+          </div>
         </div>
       </div>
     </div>
@@ -1662,12 +1801,11 @@
   </footer>
 
   <script>
-    // Mobile menu toggle
+    // ── Mobile menu toggle ──────────────────────────────────────
     const toggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     if (toggle) toggle.addEventListener('click', () => mobileMenu.classList.toggle('open'));
 
-    // Show hamburger on small screens
     function checkWidth() {
       if (window.innerWidth < 768) {
         toggle && (toggle.style.display = 'block');
@@ -1679,7 +1817,14 @@
     checkWidth();
     window.addEventListener('resize', checkWidth);
 
-    // Smooth scroll
+    // ── Dropdown: JS hover (fixes gap-break bug) ────────────────
+    document.querySelectorAll('.dropdown').forEach(dd => {
+      const menu = dd.querySelector('.dropdown-menu');
+      dd.addEventListener('mouseenter', () => { menu.style.display = 'block'; });
+      dd.addEventListener('mouseleave', () => { menu.style.display = ''; });
+    });
+
+    // ── Smooth scroll ───────────────────────────────────────────
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const id = a.getAttribute('href');
@@ -1690,23 +1835,232 @@
       });
     });
 
-    // Portfolio filter (like Vista's)
-    const filterTabs = document.querySelectorAll('.filter-tab');
-    const portfolioCards = document.querySelectorAll('.portfolio-card');
-    filterTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        filterTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        const filter = tab.dataset.filter;
-        portfolioCards.forEach(card => {
-          if (filter === 'all' || card.dataset.cat === filter) {
-            card.style.display = '';
-          } else {
-            card.style.display = 'none';
-          }
+    // ── Portfolio taxonomy ──────────────────────────────────────
+    const TAXONOMY = {
+      residential: [
+        { id: 'new-construction', label: 'New Construction' },
+        { id: 'additions',        label: 'Additions' },
+        { id: 'remodeling',       label: 'Remodeling' },
+        { id: 'decks-docks',      label: 'Decks & Docks' },
+        { id: 'kitchens',         label: 'Kitchens' },
+        { id: 'summer-kitchens',  label: 'Summer Kitchens' },
+        { id: 'bathrooms',        label: 'Bathrooms' },
+        { id: 'moldings-trims',   label: 'Moldings & Trims' },
+      ],
+      commercial: [
+        { id: 'concrete-restoration',  label: 'Concrete Restoration' },
+        { id: 'commercial-renovation', label: 'Commercial Renovation' },
+      ],
+      services: [
+        { id: 'design-build',    label: 'Design Build' },
+        { id: 'roofing',         label: 'Roofing' },
+        { id: 'stucco',          label: 'Stucco' },
+        { id: 'windows',         label: 'Windows' },
+        { id: 'tile-flooring',   label: 'Tile Flooring' },
+        { id: 'wood-flooring',   label: 'Wood Flooring' },
+        { id: 'plumbing',        label: 'Plumbing' },
+        { id: 'pavers',          label: 'Pavers' },
+        { id: 'framing-drywall', label: 'Framing & Drywall' },
+        { id: 'pools',           label: 'Pools' },
+        { id: 'electrical',      label: 'Electrical' },
+      ],
+    };
+
+    const PLACEHOLDER_COLORS = ['1a1a1a/C2AF75','2c2c2c/C2AF75','3d3d3d/C2AF75','1a1a1a/D6251B','2c2c2c/D6251B','3d3d3d/D6251B'];
+    let _allProjects = [];
+    let _activeSection = 'all';
+    let _activeSub = 'all';
+
+    function labelFor(section, sub) {
+      const found = (TAXONOMY[section] || []).find(x => x.id === sub);
+      return found ? found.label : sub;
+    }
+
+    function buildCard(p, idx) {
+      const imgSrc = p.image
+        ? p.image
+        : `https://placehold.co/800x460/${PLACEHOLDER_COLORS[idx % PLACEHOLDER_COLORS.length]}?text=${encodeURIComponent(p.title)}`;
+      const catLabel = p.section ? p.section.charAt(0).toUpperCase() + p.section.slice(1) : '';
+      const subLabel = labelFor(p.section, p.subsection);
+      return `
+        <div class="portfolio-card" data-section="${p.section || ''}" data-sub="${p.subsection || ''}">
+          <div class="portfolio-card-img">
+            <img src="${imgSrc}" alt="${p.title}" loading="lazy" />
+            <div class="portfolio-card-overlay"><span>View Project &rarr;</span></div>
+          </div>
+          <div class="portfolio-card-body">
+            <div class="portfolio-card-cat">${catLabel} &rsaquo; ${subLabel}</div>
+            <div class="portfolio-card-title">${p.title}</div>
+            ${p.description ? `<div class="portfolio-card-desc">${p.description}</div>` : ''}
+          </div>
+        </div>`;
+    }
+
+    function applyPortfolioFilter() {
+      const cards = document.querySelectorAll('.portfolio-card');
+      cards.forEach(card => {
+        const secMatch = _activeSection === 'all' || card.dataset.section === _activeSection;
+        const subMatch = _activeSub === 'all' || card.dataset.sub === _activeSub;
+        card.style.display = (secMatch && subMatch) ? '' : 'none';
+      });
+    }
+
+    function renderSubTabs() {
+      const subBar = document.getElementById('subTabs');
+      if (_activeSection === 'all' || !TAXONOMY[_activeSection]) {
+        subBar.style.display = 'none';
+        return;
+      }
+      const subs = TAXONOMY[_activeSection];
+      const secCap = _activeSection.charAt(0).toUpperCase() + _activeSection.slice(1);
+      subBar.innerHTML =
+        `<button class="sub-tab${_activeSub === 'all' ? ' active' : ''}" data-sub="all">All ${secCap}</button>` +
+        subs.map(s => `<button class="sub-tab${_activeSub === s.id ? ' active' : ''}" data-sub="${s.id}">${s.label}</button>`).join('');
+      subBar.style.display = 'flex';
+
+      subBar.querySelectorAll('.sub-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          _activeSub = btn.dataset.sub;
+          renderSubTabs();
+          applyPortfolioFilter();
         });
       });
-    });
+    }
+
+    function wireSectionTabs() {
+      document.querySelectorAll('#sectionTabs .filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('#sectionTabs .filter-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          _activeSection = tab.dataset.section;
+          _activeSub = 'all';
+          renderSubTabs();
+          applyPortfolioFilter();
+        });
+      });
+    }
+
+    // Called by nav dropdown links
+    function goPortfolio(section, sub) {
+      _activeSection = section;
+      _activeSub = sub;
+      document.querySelectorAll('#sectionTabs .filter-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.section === section);
+      });
+      renderSubTabs();
+      applyPortfolioFilter();
+      const target = document.getElementById('portfolio');
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.goPortfolio = goPortfolio;
+
+    async function loadPortfolio() {
+      try {
+        const res = await fetch('/api/portfolio');
+        const data = await res.json();
+        _allProjects = data.projects || [];
+        const grid = document.querySelector('.portfolio-grid');
+        if (!grid) return;
+        if (_allProjects.length === 0) {
+          grid.innerHTML = '<p style="text-align:center;color:var(--muted);grid-column:1/-1;padding:48px 0;">No projects yet — add some in the <a href="/admin" style="color:var(--red);">admin panel</a>.</p>';
+        } else {
+          grid.innerHTML = _allProjects.map((p, i) => buildCard(p, i)).join('');
+        }
+      } catch {
+        // API unavailable — use whatever static cards are in the DOM
+      }
+      wireSectionTabs();
+      renderSubTabs();
+      applyPortfolioFilter();
+    }
+
+    loadPortfolio();
+
+    // ── Services mosaic ─────────────────────────────────────────
+    const MOSAIC_COLORS = ['1a1a1a/C2AF75','2c2c2c/C2AF75','3d3d3d/C2AF75','1a1a1a/D6251B'];
+
+    function getMosaicImages(section, sub) {
+      // Match primary section/subsection OR any tag
+      const matches = _allProjects.filter(p =>
+        p.image && (
+          (p.section === section && p.subsection === sub) ||
+          (p.tags || []).some(t => t.section === section && t.sub === sub)
+        )
+      );
+      const imgs = matches.map(p => ({ src: p.image, alt: p.title }));
+      while (imgs.length < 4) {
+        imgs.push({ src: `https://placehold.co/640x480/${MOSAIC_COLORS[imgs.length]}?text=Coming+Soon`, alt: 'Coming soon' });
+      }
+      return imgs.slice(0, 4);
+    }
+
+    function swapMosaicCells(mosaicEl, imgs) {
+      const cells = mosaicEl.querySelectorAll('.mosaic-img');
+      cells.forEach((cell, i) => {
+        cell.classList.add('swapping');
+        setTimeout(() => {
+          cell.querySelector('img').src = imgs[i].src;
+          cell.querySelector('img').alt = imgs[i].alt;
+          cell.classList.remove('swapping');
+        }, 280);
+      });
+    }
+
+    function updateMosaic(section, sub, label) {
+      const imgs = getMosaicImages(section, sub);
+      // Desktop mosaic
+      const desktopMosaic = document.getElementById('serviceMosaic');
+      const mosaicLabel = document.getElementById('mosaicLabel');
+      if (desktopMosaic) {
+        if (mosaicLabel) mosaicLabel.textContent = label;
+        const hint = document.querySelector('.mosaic-hint');
+        if (hint) hint.classList.add('hidden');
+        swapMosaicCells(desktopMosaic, imgs);
+      }
+      // Mobile mosaic
+      const mobileMosaic = document.getElementById('serviceMosaicMobile');
+      if (mobileMosaic) swapMosaicCells(mobileMosaic, imgs);
+    }
+
+    function wireServiceItems() {
+      // Desktop: clickable list items
+      document.querySelectorAll('.service-item[data-section]').forEach(item => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.service-item').forEach(s => s.classList.remove('active'));
+          item.classList.add('active');
+          updateMosaic(item.dataset.section, item.dataset.sub, item.textContent.trim());
+        });
+      });
+
+      // Mobile: dropdown select
+      const mobileSelect = document.getElementById('servicesMobileSelect');
+      if (mobileSelect) {
+        mobileSelect.addEventListener('change', () => {
+          const val = mobileSelect.value;
+          if (!val) return;
+          const [sec, sub] = val.split('|');
+          const label = mobileSelect.options[mobileSelect.selectedIndex].text;
+          updateMosaic(sec, sub, label);
+        });
+      }
+
+      // Default: populate both mosaics with the 4 most recent images
+      const withImages = _allProjects.filter(p => p.image).slice(0, 4);
+      const defaultImgs = withImages.map(p => ({ src: p.image, alt: p.title }));
+      while (defaultImgs.length < 4) {
+        defaultImgs.push({ src: `https://placehold.co/640x480/${MOSAIC_COLORS[defaultImgs.length]}?text=GLK+Work`, alt: 'GLK Work' });
+      }
+      [document.getElementById('serviceMosaic'), document.getElementById('serviceMosaicMobile')].forEach(el => {
+        if (!el) return;
+        el.querySelectorAll('.mosaic-img').forEach((cell, i) => {
+          cell.querySelector('img').src = defaultImgs[i].src;
+          cell.querySelector('img').alt = defaultImgs[i].alt;
+        });
+      });
+    }
+
+    setTimeout(wireServiceItems, 800);
   </script>
 </body>
 </html>
