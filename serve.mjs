@@ -66,7 +66,7 @@ http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE',
+      'Access-Control-Allow-Methods': 'GET,POST,PATCH,PUT,DELETE',
       'Access-Control-Allow-Headers': 'Content-Type',
     });
     return res.end();
@@ -149,6 +149,26 @@ http.createServer(async (req, res) => {
 
       writePortfolio(data);
       return json(res, 200, project);
+    } catch (e) {
+      return json(res, 500, { error: e.message });
+    }
+  }
+
+  // ── API: PUT /api/portfolio/reorder ─────────────────────────────
+  if (req.method === 'PUT' && pathname === '/api/portfolio/reorder') {
+    try {
+      const body = await parseJsonBody(req);
+      const { order } = body;
+      if (!Array.isArray(order)) return json(res, 400, { error: 'order must be an array of ids' });
+      const data = readPortfolio();
+      const map = Object.fromEntries(data.projects.map(p => [p.id, p]));
+      const inOrder = new Set(order);
+      data.projects = [
+        ...order.map(id => map[id]).filter(Boolean),
+        ...data.projects.filter(p => !inOrder.has(p.id)),
+      ];
+      writePortfolio(data);
+      return json(res, 200, { ok: true });
     } catch (e) {
       return json(res, 500, { error: e.message });
     }

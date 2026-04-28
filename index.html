@@ -455,6 +455,26 @@
       margin-bottom: 40px;
       flex-wrap: wrap;
     }
+    /* Sub-tabs animated bar */
+    #subTabs {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+      transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1),
+                  opacity 0.25s ease,
+                  margin-top 0.35s ease,
+                  margin-bottom 0.35s ease;
+      pointer-events: none;
+    }
+    #subTabs.visible {
+      max-height: 120px;
+      opacity: 1;
+      margin-top: -16px;
+      margin-bottom: 32px;
+      pointer-events: auto;
+    }
     .filter-tab {
       font-family: 'Montserrat', sans-serif;
       font-size: 11px;
@@ -502,9 +522,21 @@
       background: var(--white);
       border: 1px solid var(--border);
       overflow: hidden;
-      transition: transform 0.25s, box-shadow 0.25s;
+      transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s;
     }
     .portfolio-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+    .portfolio-card.pf-hiding {
+      opacity: 0;
+      transform: scale(0.96);
+      pointer-events: none;
+    }
+    .portfolio-card.pf-hidden {
+      display: none !important;
+    }
+    .portfolio-card.pf-showing {
+      opacity: 0;
+      transform: scale(0.96);
+    }
     .portfolio-card-img {
       position: relative;
       overflow: hidden;
@@ -1147,6 +1179,8 @@
       .value-bar-inner { grid-template-columns: 1fr; }
       .value-item { border-right: none; border-bottom: 1px solid var(--border); }
       .portfolio-grid { grid-template-columns: 1fr; }
+      .portfolio-grid:not(.mob-expanded) .portfolio-card:not(.pf-hidden):nth-child(n+5) { display: none !important; }
+      #mob-show-more { display: flex; }
       .testimonials-grid { grid-template-columns: 1fr; }
       .services-list { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr; }
@@ -1436,7 +1470,7 @@
         <button class="filter-tab" data-section="services">Services</button>
       </div>
       <!-- Subsection chips (appear when a section is selected) -->
-      <div class="filter-tabs" id="subTabs" style="margin-top:-24px; margin-bottom:32px; display:none;"></div>
+      <div class="filter-tabs" id="subTabs"></div>
 
       <div class="portfolio-grid">
         <div class="portfolio-card" data-cat="commercial">
@@ -1510,6 +1544,16 @@
             <div class="portfolio-card-desc">Custom IPE wood deck, composite dock, summer kitchen installation, and LED lighting system.</div>
           </div>
         </div>
+      </div>
+
+      <!-- Mobile "Show More" button — hidden on desktop via CSS default -->
+      <div id="mob-show-more" style="display:none; justify-content:center; margin-top:32px;">
+        <button onclick="document.querySelector('.portfolio-grid').classList.add('mob-expanded'); this.parentElement.style.display='none';"
+          style="font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+                 padding:12px 28px; border:1px solid var(--red); background:transparent; color:var(--red); cursor:pointer;
+                 transition: background 0.18s, color 0.18s;">
+          View All Projects
+        </button>
       </div>
     </div>
   </section>
@@ -2012,24 +2056,59 @@
         </div>`;
     }
 
+    function cardShouldShow(card) {
+      const tags = JSON.parse(card.dataset.tags || '[]');
+      const secMatch = _activeSection === 'all'
+        || card.dataset.section === _activeSection
+        || tags.some(t => t.section === _activeSection);
+      const subMatch = _activeSub === 'all'
+        || card.dataset.sub === _activeSub
+        || tags.some(t => t.sub === _activeSub && (_activeSection === 'all' || t.section === _activeSection));
+      return secMatch && subMatch;
+    }
+
     function applyPortfolioFilter() {
-      const cards = document.querySelectorAll('.portfolio-card');
-      cards.forEach(card => {
-        const tags = JSON.parse(card.dataset.tags || '[]');
-        const secMatch = _activeSection === 'all'
-          || card.dataset.section === _activeSection
-          || tags.some(t => t.section === _activeSection);
-        const subMatch = _activeSub === 'all'
-          || card.dataset.sub === _activeSub
-          || tags.some(t => t.sub === _activeSub && (_activeSection === 'all' || t.section === _activeSection));
-        card.style.display = (secMatch && subMatch) ? '' : 'none';
+      // Reset mobile expansion on every filter change
+      document.querySelector('.portfolio-grid')?.classList.remove('mob-expanded');
+      const mobBtn = document.getElementById('mob-show-more');
+      if (mobBtn) mobBtn.style.display = '';  // let CSS decide visibility
+      const cards = [...document.querySelectorAll('.portfolio-card')];
+      const toHide = cards.filter(c => !cardShouldShow(c) && !c.classList.contains('pf-hidden'));
+      const toShow = cards.filter(c => cardShouldShow(c));
+
+      // Phase 1: fade out cards that need hiding
+      toHide.forEach(c => {
+        c.classList.remove('pf-showing');
+        c.classList.add('pf-hiding');
       });
+
+      const FADE = 280; // ms, matches CSS transition
+      setTimeout(() => {
+        // Phase 2: snap hidden cards out, reveal hidden-but-should-show cards
+        toHide.forEach(c => {
+          c.classList.remove('pf-hiding');
+          c.classList.add('pf-hidden');
+        });
+        toShow.forEach((c, i) => {
+          if (c.classList.contains('pf-hidden')) {
+            c.classList.remove('pf-hidden');
+            // force reflow so the transition fires
+            void c.offsetWidth;
+          }
+          c.classList.remove('pf-hiding');
+          c.classList.add('pf-showing');
+          // stagger fade-in
+          setTimeout(() => {
+            c.classList.remove('pf-showing');
+          }, i * 30);
+        });
+      }, toHide.length ? FADE : 0);
     }
 
     function renderSubTabs() {
       const subBar = document.getElementById('subTabs');
       if (_activeSection === 'all' || !TAXONOMY[_activeSection]) {
-        subBar.style.display = 'none';
+        subBar.classList.remove('visible');
         return;
       }
       // Only show sub-tabs that have at least one card (primary sub OR tag)
@@ -2048,7 +2127,10 @@
       subBar.innerHTML =
         `<button class="sub-tab${_activeSub === 'all' ? ' active' : ''}" data-sub="all">All ${secCap}</button>` +
         subs.map(s => `<button class="sub-tab${_activeSub === s.id ? ' active' : ''}" data-sub="${s.id}">${s.label}</button>`).join('');
-      subBar.style.display = 'flex';
+
+      // Force reflow before adding class so transition fires when first shown
+      void subBar.offsetWidth;
+      subBar.classList.add('visible');
 
       subBar.querySelectorAll('.sub-tab').forEach(btn => {
         btn.addEventListener('click', () => {

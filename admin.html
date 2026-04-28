@@ -95,9 +95,15 @@
 
     /* project cards */
     .project-list{display:flex;flex-direction:column;gap:10px;}
-    .project-card{background:var(--white);border:1px solid var(--border);transition:box-shadow .2s;}
+    .project-card{background:var(--white);border:1px solid var(--border);transition:box-shadow .2s,opacity .2s,transform .2s;}
     .project-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07);}
-    .pcard-view{display:grid;grid-template-columns:90px 1fr auto;gap:0;align-items:stretch;}
+    .project-card.drag-over-top{border-top:2px solid var(--red);}
+    .project-card.drag-over-bottom{border-bottom:2px solid var(--red);}
+    .project-card.dragging{opacity:.4;transform:scale(.99);}
+    .drag-handle{width:32px;display:flex;align-items:center;justify-content:center;cursor:grab;color:var(--border);font-size:16px;border-right:1px solid var(--border);flex-shrink:0;user-select:none;}
+    .drag-handle:hover{color:var(--muted);}
+    .drag-handle:active{cursor:grabbing;}
+    .pcard-view{display:grid;grid-template-columns:32px 90px 1fr auto;gap:0;align-items:stretch;}
     .pcard-thumb{width:90px;height:72px;object-fit:cover;display:block;background:var(--charcoal);}
     .pcard-thumb-empty{width:90px;height:72px;background:var(--offwhite);border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--border);flex-shrink:0;}
     .pcard-info{padding:10px 14px;min-width:0;}
@@ -457,8 +463,9 @@ function buildProjectCard(p){
   if(!_pendingTags[editTagsKey]) _pendingTags[editTagsKey]=[...(p.tags||[])];
 
   return `
-  <div class="project-card" id="card-${p.id}">
+  <div class="project-card" id="card-${p.id}" draggable="true" data-id="${p.id}">
     <div class="pcard-view">
+      <div class="drag-handle" title="Drag to reorder">⠿</div>
       ${thumb}
       <div class="pcard-info">
         <div class="pcard-crumb">${crumb}</div>
@@ -533,6 +540,60 @@ function buildProjectCard(p){
   </div>`;
 }
 
+function wireDragAndDrop(list){
+  let dragSrcId=null;
+
+  list.querySelectorAll('.project-card[draggable]').forEach(card=>{
+    card.addEventListener('dragstart',e=>{
+      dragSrcId=card.dataset.id;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+    });
+    card.addEventListener('dragend',()=>{
+      card.classList.remove('dragging');
+      list.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(c=>{
+        c.classList.remove('drag-over-top','drag-over-bottom');
+      });
+    });
+    card.addEventListener('dragover',e=>{
+      e.preventDefault();
+      e.dataTransfer.dropEffect='move';
+      list.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(c=>{
+        c.classList.remove('drag-over-top','drag-over-bottom');
+      });
+      const rect=card.getBoundingClientRect();
+      const mid=rect.top+rect.height/2;
+      card.classList.add(e.clientY<mid?'drag-over-top':'drag-over-bottom');
+    });
+    card.addEventListener('dragleave',()=>{
+      card.classList.remove('drag-over-top','drag-over-bottom');
+    });
+    card.addEventListener('drop',async e=>{
+      e.preventDefault();
+      if(!dragSrcId||dragSrcId===card.dataset.id) return;
+      const rect=card.getBoundingClientRect();
+      const insertBefore=e.clientY<rect.top+rect.height/2;
+
+      const srcEl=list.querySelector(`[data-id="${dragSrcId}"]`);
+      if(insertBefore) list.insertBefore(srcEl,card);
+      else card.after(srcEl);
+
+      card.classList.remove('drag-over-top','drag-over-bottom');
+
+      // Persist the new order — only when showing all (unfiltered)
+      const order=[...list.querySelectorAll('.project-card[data-id]')].map(c=>c.dataset.id);
+      try{
+        const res=await fetch('/api/portfolio/reorder',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({order})});
+        if(!res.ok) throw new Error('Reorder failed');
+        showToast('✓ Order saved!');
+        // sync allProjects array to match new order
+        const map=Object.fromEntries(allProjects.map(p=>[p.id,p]));
+        allProjects=order.map(id=>map[id]).filter(Boolean);
+      }catch(err){showToast('Error: '+err.message,true);}
+    });
+  });
+}
+
 function wireProjectCard(list){
   // Render tag chips for each edit panel
   list.querySelectorAll('.pcard-edit').forEach(panel=>{
@@ -600,6 +661,9 @@ function wireProjectCard(list){
       }catch(err){showToast('Error: '+err.message,true);}
     });
   });
+
+  // Drag-and-drop reordering
+  wireDragAndDrop(list);
 
   // Section cascade in edit panels
   list.querySelectorAll('.edit-section').forEach(sel=>{

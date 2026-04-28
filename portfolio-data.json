@@ -1,6 +1,56 @@
 {
   "projects": [
     {
+      "id": "proj-1777405035336",
+      "section": "residential",
+      "subsection": "remodeling",
+      "tags": [
+        {
+          "section": "residential",
+          "sub": "additions"
+        },
+        {
+          "section": "services",
+          "sub": "roofing"
+        },
+        {
+          "section": "services",
+          "sub": "framing-drywall"
+        }
+      ],
+      "title": "(TODO) - Create Project for multiple photos.",
+      "description": "Week 4 of a 10 week remodel",
+      "location": "Ft. Lauderdale",
+      "image": "/images/portfolio/residential/remodeling/DSCI0321.25742450_std-1920w.JPG.webp"
+    },
+    {
+      "id": "proj-1777395224342",
+      "section": "commercial",
+      "subsection": "commercial-renovation",
+      "title": "Frame Addition",
+      "description": "",
+      "location": "Coral Gables",
+      "image": "/images/portfolio/commercial/commercial-renovation/additions7.webp"
+    },
+    {
+      "id": "proj-1777396959761",
+      "section": "residential",
+      "subsection": "bathrooms",
+      "title": "Bathroom Redesign",
+      "description": "",
+      "location": "West Palm Beach",
+      "image": "/images/portfolio/residential/bathrooms/bathrooms1.webp"
+    },
+    {
+      "id": "proj-1777397087322",
+      "section": "residential",
+      "subsection": "decks-docks",
+      "title": "Dock Remodel",
+      "description": "",
+      "location": "",
+      "image": "/images/portfolio/residential/decks-docks/decks_docks_6.webp"
+    },
+    {
       "id": "proj-2",
       "section": "residential",
       "subsection": "additions",
@@ -43,15 +93,6 @@
       "image": "/images/portfolio/residential/new-construction/new_construction6.webp"
     },
     {
-      "id": "proj-1777395224342",
-      "section": "commercial",
-      "subsection": "commercial-renovation",
-      "title": "Frame Addition",
-      "description": "",
-      "location": "Coral Gables",
-      "image": "/images/portfolio/commercial/commercial-renovation/additions7.webp"
-    },
-    {
       "id": "proj-1777396788153",
       "section": "services",
       "subsection": "design-build",
@@ -70,15 +111,6 @@
       "image": "/images/portfolio/commercial/commercial-renovation/cocrete_renovations__Downtown_Fort_Lauderdale_Restoration_of_a_three_story_building_at_Flagler_Village.__.webp"
     },
     {
-      "id": "proj-1777396959761",
-      "section": "residential",
-      "subsection": "bathrooms",
-      "title": "Bathroom Redesign",
-      "description": "",
-      "location": "West Palm Beach",
-      "image": "/images/portfolio/residential/bathrooms/bathrooms1.webp"
-    },
-    {
       "id": "proj-1777397013071",
       "section": "residential",
       "subsection": "kitchens",
@@ -88,15 +120,6 @@
       "image": "/images/portfolio/residential/kitchens/kitchens-after2.jpeg"
     },
     {
-      "id": "proj-1777397087322",
-      "section": "residential",
-      "subsection": "decks-docks",
-      "title": "Dock Remodel",
-      "description": "",
-      "location": "",
-      "image": "/images/portfolio/residential/decks-docks/decks_docks_6.webp"
-    },
-    {
       "id": "proj-1777397320506",
       "section": "residential",
       "subsection": "kitchens",
@@ -104,29 +127,6 @@
       "description": "",
       "location": "Pompano Beach",
       "image": "/images/portfolio/residential/kitchens/Kitchens.webp"
-    },
-    {
-      "id": "proj-1777405035336",
-      "section": "residential",
-      "subsection": "remodeling",
-      "tags": [
-        {
-          "section": "residential",
-          "sub": "additions"
-        },
-        {
-          "section": "services",
-          "sub": "roofing"
-        },
-        {
-          "section": "services",
-          "sub": "framing-drywall"
-        }
-      ],
-      "title": "(TODO) - Create Project for multiple photos.",
-      "description": "Week 4 of a 10 week remodel",
-      "location": "Ft. Lauderdale",
-      "image": "/images/portfolio/residential/remodeling/DSCI0321.25742450_std-1920w.JPG.webp"
     },
     {
       "id": "proj-1777405165083",
