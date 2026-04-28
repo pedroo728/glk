@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>GLK Construction | Ft. Lauderdale Building Contractor & Home Builder</title>
   <link rel="icon" href="https://irp.cdn-website.com/75b9214c/dms3rep/multi/57.png" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -164,6 +164,24 @@
     /* Mobile menu */
     #mobile-menu { display: none; background: var(--charcoal); border-top: 3px solid var(--red); }
     #mobile-menu.open { display: block; }
+    .mob-dropdown-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; background: none; border: none; cursor: pointer;
+      color: var(--white); font-family: var(--font-sans); font-size: 13px;
+      font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .mob-dropdown-toggle:hover { color: var(--gold); }
+    .mob-chevron { transition: transform 0.22s ease; flex-shrink: 0; }
+    .mob-dropdown-toggle[aria-expanded="true"] .mob-chevron { transform: rotate(180deg); }
+    .mob-dropdown-panel { display: none; background: rgba(0,0,0,0.25); }
+    .mob-dropdown-panel.open { display: block; }
+    .mob-sub {
+      display: block; padding: 10px 24px 10px 40px !important;
+      font-size: 12px !important; color: rgba(255,255,255,0.7) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    }
+    .mob-sub:hover { color: var(--gold) !important; }
     #mobile-menu a {
       display: block;
       padding: 12px 24px;
@@ -1260,18 +1278,56 @@
     </div>
 
     <div id="mobile-menu">
-      <a href="#">Home</a>
-      <a href="#reviews">Reviews</a>
-      <div class="mobile-section-label">Residential</div>
-      <a href="#" style="padding-left:36px; font-size:10px;">New Construction</a>
-      <a href="#" style="padding-left:36px; font-size:10px;">Additions</a>
-      <a href="#" style="padding-left:36px; font-size:10px;">Remodeling</a>
-      <a href="#" style="padding-left:36px; font-size:10px;">Decks &amp; Docks / Kitchens / Bathrooms</a>
-      <div class="mobile-section-label">Commercial</div>
-      <a href="#" style="padding-left:36px; font-size:10px;">Concrete Restoration</a>
-      <a href="#" style="padding-left:36px; font-size:10px;">Commercial Renovation</a>
-      <a href="#about">About</a>
-      <a href="#contact" style="color:var(--gold);">Contact Us</a>
+      <a href="#" class="mob-close">Home</a>
+      <a href="#reviews" class="mob-close">Reviews</a>
+
+      <!-- Residential -->
+      <button class="mob-dropdown-toggle" aria-expanded="false">
+        Residential
+        <svg class="mob-chevron" width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="mob-dropdown-panel">
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('residential','new-construction')">New Construction</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('residential','additions')">Additions</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('residential','remodeling')">Remodeling</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('residential','decks-docks')">Decks &amp; Docks</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('residential','kitchens')">Kitchens</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('residential','summer-kitchens')">Summer Kitchens</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('residential','bathrooms')">Bathrooms</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('residential','moldings-trims')">Moldings &amp; Trims</a>
+      </div>
+
+      <!-- Commercial -->
+      <button class="mob-dropdown-toggle" aria-expanded="false">
+        Commercial
+        <svg class="mob-chevron" width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="mob-dropdown-panel">
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('commercial','concrete-restoration')">Concrete Restoration</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('commercial','commercial-renovation')">Commercial Renovation</a>
+      </div>
+
+      <!-- Services -->
+      <button class="mob-dropdown-toggle" aria-expanded="false">
+        Services
+        <svg class="mob-chevron" width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="mob-dropdown-panel">
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','design-build')">Design Build</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','roofing')">Roofing</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','stucco')">Stucco</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','windows')">Windows</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','tile-flooring')">Tile Flooring</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','wood-flooring')">Wood Flooring</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','plumbing')">Plumbing</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','pavers')">Pavers</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','framing-drywall')">Framing &amp; Drywall</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','pools')">Pools</a>
+        <a href="#portfolio" class="mob-sub mob-close" onclick="goPortfolio('services','electrical')">Electrical</a>
+      </div>
+
+      <a href="#about" class="mob-close">About Us</a>
+      <a href="#contact" class="mob-close" style="color:var(--gold);">Contact Us</a>
     </div>
   </header>
 
@@ -1662,6 +1718,7 @@
         </div>
       </div>
       <div>
+        <p style="font-family:var(--font-sans);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">Meet the Team</p>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
           <div style="border:1px solid var(--border); box-shadow:6px 6px 0 var(--gold); overflow:hidden;">
             <img src="/images/team/team1.jpeg" alt="GLK Construction team" style="width:100%; height:100%; object-fit:cover; display:block;" />
@@ -1840,6 +1897,30 @@
     if (toggle) toggle.addEventListener('click', () => mobileMenu.classList.toggle('open'));
     const mobileContactBtn = document.getElementById('mobile-contact-btn');
     if (mobileContactBtn) mobileContactBtn.addEventListener('click', () => mobileMenu.classList.remove('open'));
+
+    // Mobile collapsible dropdowns
+    document.querySelectorAll('.mob-dropdown-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const panel = btn.nextElementSibling;
+        const isOpen = panel.classList.contains('open');
+        // Close all panels first
+        document.querySelectorAll('.mob-dropdown-panel').forEach(p => p.classList.remove('open'));
+        document.querySelectorAll('.mob-dropdown-toggle').forEach(b => b.setAttribute('aria-expanded','false'));
+        if (!isOpen) {
+          panel.classList.add('open');
+          btn.setAttribute('aria-expanded','true');
+        }
+      });
+    });
+
+    // Close mobile menu when any link inside it is tapped
+    document.querySelectorAll('#mobile-menu .mob-close').forEach(el => {
+      el.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        document.querySelectorAll('.mob-dropdown-panel').forEach(p => p.classList.remove('open'));
+        document.querySelectorAll('.mob-dropdown-toggle').forEach(b => b.setAttribute('aria-expanded','false'));
+      });
+    });
 
     function checkWidth() {
       if (window.innerWidth < 768) {
